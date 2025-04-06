@@ -1,0 +1,44 @@
+.recordingPage{
+    padding: 20px;
+    overflow: auto;
+    height: calc(100% - 36px);
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    .recordingGroup{
+        .groupTitle{
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: var(--main);
+        }
+        .header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 14px 18px 10px;
+            color: gray;
+            font-size: 12px;
+            font-weight: 500;
+            p{
+                flex:1;
+                &:first-child{
+                    width: 40px;
+                    flex:none;
+                }
+                &:last-child{
+                    text-align: center;
+                    padding: 0px 12px;
+                }
+                &:nth-child(2){
+                    flex: 2;
+                }
+                &:nth-child(5){
+                   width: 94px;
+                   flex: none;
+                }
+            }
+        }
+    }
+}

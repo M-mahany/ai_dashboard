@@ -1,0 +1,39 @@
+#storeButton{
+    background-color: transparent;
+    text-transform: capitalize;
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    .storeName{
+        max-width: 75px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .icon{
+        font-size: 12px;
+    }
+}
+
+    #popverMenu{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 16px;
+    padding: 8px 12px;
+    color: #4c4c4c;
+    display: flex;
+    flex-direction: column;
+    button{
+        gap: 4px;
+        justify-content: flex-start;
+        text-transform: capitalize;
+        color: #4c4c4c;
+        &.active{
+            background-color: #ffc98c31;
+            color: #e5800c;
+            font-weight: 500;
+        }
+    }
+    }
