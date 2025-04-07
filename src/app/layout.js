@@ -1,14 +1,14 @@
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Open_Sans, Roboto } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const robotoFont = Roboto({
+  variable: '--font-roboto',
   subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const openSansFont = Open_Sans({
+  variable: '--font-open-sans',
   subsets: ['latin'],
 });
 
@@ -20,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${robotoFont.variable} ${openSansFont.variable}`}>
         <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
       </body>
     </html>
