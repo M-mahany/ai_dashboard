@@ -1,15 +1,10 @@
-body{
-    background-color: var(--main);
-    display: flex;
-    padding: 18px;
-    height: calc(100vh - 38px);
-    max-height: calc(100vh - 36px);
-    max-width: calc(100vw - 36px);
-}
 .dashboardBody{
+    background-color: var(--main);
+    padding: 18px;
     display: flex;
     flex-grow: 1;
     gap: 18px;
+    height: calc(100vh - 36px);
 }
 .dashboardContent{
 flex-grow: 1;

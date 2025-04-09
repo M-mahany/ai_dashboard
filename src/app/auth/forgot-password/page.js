@@ -1,15 +1,16 @@
 import AuthForm from '@/components/AuthForm';
 import '../auth.scss';
-import { resetPasswordForm } from '@/utils/authForms';
+import { forgotPasswordForm } from '@/utils/authForms';
 
-const ResetPassword = () => {
+const ForgotPassword = () => {
   return (
     <div className="authPage">
       <div className="innerWrapper">
         <div className="authFormSection" style={{ justifyContent: 'center' }}>
           <div className="middleSection">
-            <h1>Reset Password</h1>
-            <AuthForm type={'reset-password'} form={resetPasswordForm} />
+            <h1>Password Recovery</h1>
+            <p className="subHead">Recover you password using your email</p>
+            <AuthForm type={'forgot-password'} form={forgotPasswordForm} />
           </div>
         </div>
       </div>
@@ -17,4 +18,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ForgotPassword;

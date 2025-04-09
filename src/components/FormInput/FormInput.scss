@@ -1,0 +1,21 @@
+.formInput{
+    width: 100%;
+    &.short{
+        width: calc(50% - 6px);
+    }
+    .label{
+        display: block;
+        padding-left: 16px;
+        margin-bottom: 4px;
+        color: #797979;
+        font-size: 14px;
+        font-weight: 500;
+    }
+.MuiInputBase-root.MuiOutlinedInput-root{
+    background-color: #f6f4f2;
+    border-radius: 42px;
+    &.Mui-focused .MuiOutlinedInput-notchedOutline{
+        border-color: var(--secondary);
+    }
+}
+}

@@ -14,9 +14,9 @@ export const mainLinks = [
     name: 'Devices',
     href: '/dashboard/devices',
   },
-  {
-    id: 4,
-    name: 'Settings',
-    href: '/dashboard/settings',
-  },
+  // {
+  //   id: 4,
+  //   name: 'Settings',
+  //   href: '/dashboard/settings',
+  // },
 ];

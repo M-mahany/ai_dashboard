@@ -1,0 +1,119 @@
+.authPage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    background: linear-gradient(0deg, rgba(242,232,196,0.9632645294445903) 0%, rgba(235,232,212,0.8372141092765231) 49%, rgba(228,228,228,0.6747491232821253) 100%);
+    backdrop-filter:blur(20px);
+    overflow: auto;
+    .innerWrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 1520px;
+        width: calc(100% - 64px);
+        padding: 32px;
+        gap: 96px;
+        min-height: fit-content;
+        height: calc(100vh - 64px);
+        max-height: 1000px;
+    }
+    .authFormSection{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 64px;
+        justify-content: space-between;
+        flex: 1;
+        .brandName{
+            display: block;
+            padding: 10px 22px;
+            border: 1px solid black;
+            border-radius: 24px;
+            color: black;
+        }
+        .middleSection{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            h1{
+                font-weight: 500;
+            }
+            .subHead{
+                margin-top: 6px;
+                font-size: 16px;
+            }
+            .authForm{
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 42px;
+                width: 100%;
+                max-width: 450px;
+                gap: 12px;
+                .submitBttn{
+                    margin-top: 24px;
+                    background-color: var(--secondary);
+                    color: #f6f4f2;
+                    width: 100%;
+                    height: 52px;
+                    border-radius: 32px;
+                    font-size: 18px;
+                    text-transform: capitalize;
+                    color: rgb(63, 63, 63);
+                }
+                .forgotLink{
+                    text-decoration: underline;
+                    text-align: center;
+                    display: block;
+                    width: 100%;
+                }
+            }
+        }
+        .usefulLink{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            a{
+                text-decoration: underline;
+                &:hover{
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+    .authImageWrapper{
+        height: 100%;
+        position: relative;
+        flex: 1.1;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        img{
+            object-fit: cover;
+            border-radius: 42px;
+        }
+        .absoluteImg{
+            position: absolute;
+            left: -80px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 0px;
+            object-fit: contain;
+            z-index: 5;
+        }
+        .layer{
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            border-radius: 42px;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.194);
+        }
+    }
+}
