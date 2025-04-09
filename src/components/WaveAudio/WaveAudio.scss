@@ -1,0 +1,79 @@
+#waveAudio{
+    cursor: pointer;
+    position: relative;
+    #waveHover {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        pointer-events: none;
+        height: 100%;
+        width: 0;
+        mix-blend-mode: overlay;
+        background: #ffc788e1;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      &:hover {
+        #waveHover {
+        opacity: 1;
+      }
+    }
+    #waveTime,
+    #waveDuration {
+      position: absolute;
+      z-index: 11;
+      top: 50%;
+      margin-top: -1px;
+      transform: translateY(-50%);
+      font-size: 11px;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 2px;
+      color: #ddd;
+    }
+    #waveTime {
+        left: 0;
+      }
+    #waveDuration {
+        right: 0;
+      }
+}
+.audioWithTranscript{
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 9px;
+  height: calc(100% - 18px);
+  .waveAudioWrapper{
+    border: 2px solid #ededed;
+    border-radius: 12px;
+    padding: 0px 12px;
+    width: calc(100% - 28px);
+    min-height: 130px;
+  }
+  .mediaControl{
+    display: flex;
+    padding: 12px 24;
+    border-radius: 12px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    .medialBox{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex: 1;
+      .iconBttn{
+        border: 1px solid #ededed;
+        color: var(--main);
+      }
+      .customAudioProgress{
+        color: var(--main);
+      }
+      .timestamp{
+        font-size: 14px;
+        font-weight: 600;
+        color: #c5c5c5;
+      }
+    }
+    }
+}

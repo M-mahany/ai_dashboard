@@ -118,6 +118,9 @@
             border-radius: 16px;
             flex: 3;
             box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            padding: 9px;
+            max-height: calc(100% - 180px);
+            overflow: hidden;
         }
     }
     .right{
@@ -198,42 +201,42 @@
                 transition: .3s all ease-in-out;
             }
         }
-        .tabContent{
-            font-family: "Roboto", sans-serif;
-            line-height: 160%;
-            font-size: 16px;
-            flex-grow: 1;
-            overflow: auto;
-            display: none;
-            &.active{
-                display: block;
-            }
-            .duration{
-                display: block;
-                margin: 6px 0px 0px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                width: 100%;
-                font-weight: 500;
-                font-size: 12px;
-                p{
-                    color: var(--main);
-                }
-            }
-            .heading{
-                display: block;
-                padding: 6px 0px;
-                p{
-                    color: var(--main);
-                    font-size: 16px;
-                    font-weight: 500;
-                }
-            }
+    }
+    }
+    .tabContent{
+        font-family: "Roboto", sans-serif;
+        line-height: 160%;
+        font-size: 16px;
+        flex-grow: 1;
+        overflow: auto;
+        display: none;
+        &.active{
+            display: block;
+        }
+        .duration{
+            display: block;
+            margin: 6px 0px 0px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            font-weight: 500;
+            font-size: 12px;
             p{
-                color: #303030;
+                color: var(--main);
             }
         }
-    }
+        .heading{
+            display: block;
+            padding: 6px 0px;
+            p{
+                color: var(--main);
+                font-size: 16px;
+                font-weight: 500;
+            }
+        }
+        p{
+            color: #303030;
+        }
     }
 }
