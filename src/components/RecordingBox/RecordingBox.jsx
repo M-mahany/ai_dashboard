@@ -1,11 +1,13 @@
 'use client';
 
+import { formatTime } from '@/utils/helpers/time';
 import './RecordingBox.scss';
 import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { MdDelete, MdDownload, MdOutlinePlayCircleFilled, MdOutlinePlayCircle } from 'react-icons/md';
+import dayjs from 'dayjs';
 
-const RecordingBox = () => {
+const RecordingBox = ({ recording }) => {
   const router = useRouter();
 
   const handleClick = (e, eventType) => {
@@ -13,15 +15,15 @@ const RecordingBox = () => {
   };
 
   return (
-    <div className="recordingBox" onClick={() => router.push(`recordings/swdedeed`)}>
+    <div className="recordingBox" onClick={() => router.push(`recordings/${recording?._id}`)}>
       <span className="boxIcon">
         <MdOutlinePlayCircle className="icon" />
         <MdOutlinePlayCircleFilled className="icon filled" />
       </span>
-      <p className="recordingName">In-store recording of March 21</p>
-      <p>23:45:00</p>
-      <p>2024-03-21</p>
-      <span className={`status analyzed`}>analyzed</span>
+      <p className="recordingName">{dayjs(recording?.date).format('MMMM D')} - In-store recording</p>
+      <p>{formatTime(recording?.duration)}</p>
+      <p>{recording?.date}</p>
+      <span className={`status ${recording?.status}`}>{recording?.status}</span>
       <div className="actions">
         <IconButton className="iconBttn" onClick={(e) => handleClick(e, 'download')}>
           <MdDownload className="icon" />

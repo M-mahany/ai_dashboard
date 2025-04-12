@@ -7,8 +7,9 @@ import { HiOutlineServer } from 'react-icons/hi2';
 import { RiDashboardFill } from 'react-icons/ri';
 import { IoMdSettings } from 'react-icons/io';
 import { mainLinks } from '@/utils/mainLinks';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 const linkIcon = (linkName) => {
   switch (linkName) {
@@ -24,12 +25,11 @@ const linkIcon = (linkName) => {
 };
 
 const SideBar = () => {
-  const router = useRouter();
-  const navigate = (path) => router.push(path);
   const pathName = usePathname();
 
   const handleLogout = () => {
-    navigate('/auth/login');
+    Cookies.remove('authToken');
+    location.reload();
   };
 
   return (

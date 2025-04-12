@@ -7,7 +7,9 @@ import Image from 'next/image';
 import { CircularProgress } from '@mui/material';
 import { FaCircle } from 'react-icons/fa';
 import WaveAudio from '@/components/WaveAudio/WaveAudio';
-import { demoRecording } from '@/utils/demo';
+import { useGetRecordingByIdQuery } from '@/lib/services/recordingsApi';
+import { useParams } from 'next/navigation';
+import { formatTime } from '@/utils/helpers/time';
 
 const defaultStatus = ['pending', 'merged', 'transcriped', 'analyzed'];
 
@@ -15,14 +17,20 @@ const SingleRecording = () => {
   const [selectedTab, setSelectedTab] = useState('Transcript');
   const tabLabels = ['Transcript', 'Insights', 'Feedback'];
 
-  const demoStatus = 'transcriped';
+  // get recording id
+  const params = useParams();
+  const { id } = params;
+
+  const { data, isLoading, error } = useGetRecordingByIdQuery(id);
+
+  const recording = data?.data;
 
   const getStatusProgress = (status) => {
     return ((defaultStatus.indexOf(status) + 1) / defaultStatus.length) * 100;
   };
 
   const isStatusCompleted = (status) => {
-    const RecoridngStatusIndex = defaultStatus.indexOf(demoStatus);
+    const RecoridngStatusIndex = defaultStatus.indexOf(recording?.status);
     return defaultStatus.indexOf(status) <= RecoridngStatusIndex ? true : false;
   };
 
@@ -35,7 +43,7 @@ const SingleRecording = () => {
               <CircularProgress
                 className="recordingProgress"
                 variant="determinate"
-                value={getStatusProgress(demoStatus)}
+                value={getStatusProgress(recording?.status)}
                 thickness={2}
               />
               <CircularProgress
@@ -46,7 +54,7 @@ const SingleRecording = () => {
                 sx={{ color: 'gray' }}
               />
               <span className="infoBox" style={{ position: 'absolute' }}>
-                <p className="bg">{getStatusProgress(demoStatus)}%</p>
+                <p className="bg">{getStatusProgress(recording?.status)}%</p>
                 <p className="smll">Completed</p>
               </span>
             </div>
@@ -66,44 +74,46 @@ const SingleRecording = () => {
               <Image src="/assets/soundbites.png" alt="soundImg" layout="responsive" width={225} height={225} />
             </div>
             <span className="infoBox">
-              <p className="bg">23:59</p>
-              <p className="smll">Minutes processed</p>
+              <p className="bg">{formatTime(recording?.duration ?? 0)}</p>
+              <p className="smll">Minutes {recording?.status}</p>
             </span>
           </div>
         </div>
         <div className="bottom">
-          <WaveAudio recording={demoRecording}>
-            <div className="tabContent active">
-              <span className="duration">
-                <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-              </span>
-              <p>
-                What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                but also the
-              </p>
+          {recording && (
+            <WaveAudio recording={recording}>
+              <div className="tabContent active">
+                <span className="duration">
+                  <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
+                </span>
+                <p>
+                  What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                  Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
+                  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
+                  but also the
+                </p>
 
-              <span className="duration">
-                <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-              </span>
-              <p>
-                What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                but also the
-              </p>
-              <span className="duration">
-                <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-              </span>
-              <p>
-                What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                but also the
-              </p>
-            </div>
-          </WaveAudio>
+                <span className="duration">
+                  <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
+                </span>
+                <p>
+                  What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                  Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
+                  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
+                  but also the
+                </p>
+                <span className="duration">
+                  <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
+                </span>
+                <p>
+                  What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                  Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
+                  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
+                  but also the
+                </p>
+              </div>
+            </WaveAudio>
+          )}
         </div>
       </div>
       <div className="right">

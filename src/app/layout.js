@@ -1,6 +1,7 @@
 import { Open_Sans, Roboto } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import './globals.css';
+import ReduxProvider from '@/components/Provider';
 
 const robotoFont = Roboto({
   variable: '--font-roboto',
@@ -21,7 +22,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${robotoFont.variable} ${openSansFont.variable}`}>
-        <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+        <ReduxProvider>
+          <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+        </ReduxProvider>
       </body>
     </html>
   );
