@@ -139,6 +139,10 @@
             border: 1.5px solid #ededed;
             border-radius: 10px;
             padding: 4px 8px;
+            &.disabled{
+                opacity: 0.6;
+                pointer-events: none;
+            }
             .icon{
                 color: #ededed;
                 font-size: 24px;
@@ -214,6 +218,39 @@
         &.active{
             display: block;
         }
+            .emptyContent{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                height: 100%;
+                .icon{
+                  color: #c5c5c5;
+                  font-size: 38px;
+                }
+                p{
+                  margin-top: 12px;
+                  color: #c5c5c5;
+                  font-size: 14px;
+                  font-weight: 500;
+                }
+        }
+        .segmentWrapper{
+            cursor: pointer;
+            &.active{
+                .segmentTxt{
+                font-size: 17px;
+                font-weight: 500;
+                }
+            }
+        .highlightedWord{
+            padding: 2px 2px 0px;
+            background-color: var(--secondary-light);
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--main);
+        }
+        }
         .duration{
             display: block;
             margin: 6px 0px 0px;
@@ -236,7 +273,7 @@
                 font-weight: 500;
             }
         }
-        p{
+        .segmentTxt{
             color: #303030;
         }
     }

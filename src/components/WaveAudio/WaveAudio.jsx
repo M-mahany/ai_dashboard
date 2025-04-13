@@ -6,22 +6,32 @@ import { IconButton, Slider } from '@mui/material';
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from 'react-icons/rx';
 import { RiPlayLargeFill } from 'react-icons/ri';
 import { HiPause } from 'react-icons/hi2';
-import { CgSoftwareDownload } from 'react-icons/cg';
 import { RiResetLeftFill } from 'react-icons/ri';
 import { formatTime } from '@/utils/helpers/time';
+import { MdOutlinePendingActions } from 'react-icons/md';
+import RecordingDownloadButton from '../RecordingDownloadButton';
 
-const WaveAudio = ({ recording, children }) => {
-  const url = recording?.fileUrl;
+const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence }) => {
+  const streamUrl = recording?.streamUrl;
   const duration = recording?.duration;
+
+  if (recording?.status === 'pending') {
+    return (
+      <span className="pendingRecording">
+        <MdOutlinePendingActions className="icon" />
+        <p>Recording still pending!</p>
+      </span>
+    );
+  }
 
   const containerRef = useRef(null);
   const waveHoverRef = useRef(null);
 
   const [progress, setProgress] = useState(0);
 
-  const memoizedUrl = useMemo(() => url, [url]);
+  const memoizedUrl = useMemo(() => streamUrl, [streamUrl]);
   const memorizedPeaks = useMemo(() => recording?.peaks, [recording?.peaks]);
-  console.log(memorizedPeaks);
+
   const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
     container: containerRef,
     height: 130,
@@ -44,7 +54,12 @@ const WaveAudio = ({ recording, children }) => {
       wavesurfer.setTime(0);
       setProgress(0);
     }
+    setCurrentTime(time);
   });
+
+  useEffect(() => {
+    !refrence && wavesurfer && setRefrence(wavesurfer);
+  }, [wavesurfer]);
 
   const resetAudio = () => {
     wavesurfer?.setTime(0);
@@ -83,10 +98,10 @@ const WaveAudio = ({ recording, children }) => {
     wavesurfer.skip(-10);
   };
 
-  console.log('helloooo');
   return (
-    <div className="audioWithTranscript">
-      <div className="waveAudioWrapper">
+    <div className={`audioWithTranscript ${!streamUrl || streamUrl === '' ? 'disabled' : ''}`}>
+      <div className={`waveAudioWrapper ${!recording?.peaks || !recording?.peaks?.length ? 'disabled' : ''}`}>
+        <span className="noPeaksTxt">Audio peaks not avaiable</span>
         <div ref={containerRef} id="waveAudio">
           <span id="waveDuration">{formatTime(duration)}</span>
           <span id="waveTime">{formatTime(currentTime)}</span>
@@ -109,9 +124,7 @@ const WaveAudio = ({ recording, children }) => {
           <IconButton className="iconBttn" onClick={forwardClick}>
             <RxDoubleArrowRight />
           </IconButton>
-          <IconButton className="iconBttn">
-            <CgSoftwareDownload />
-          </IconButton>
+          <RecordingDownloadButton props={{ className: 'iconBttn' }} recordingId={recording?._id} />
         </div>
         <div className="medialBox">
           <span className="timestamp">{formatTime(currentTime)}</span>

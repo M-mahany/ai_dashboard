@@ -64,6 +64,9 @@
             font-size: 22px;
             background-color: #4666a715;
             color: #4667a7;
+            &:disabled{
+                opacity: 0.4;
+            }
             &.delete{
                 color: #ef5350;
                 background-color: #ef535014;

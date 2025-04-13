@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './SingleRecording.scss';
 import { IoIosSearch } from 'react-icons/io';
 import Image from 'next/image';
@@ -10,12 +10,21 @@ import WaveAudio from '@/components/WaveAudio/WaveAudio';
 import { useGetRecordingByIdQuery } from '@/lib/services/recordingsApi';
 import { useParams } from 'next/navigation';
 import { formatTime } from '@/utils/helpers/time';
+import { MdHourglassEmpty } from 'react-icons/md';
+import { toast } from 'react-toastify';
+import RecordingTranscript from '@/components/RecordingTranscript';
 
 const defaultStatus = ['pending', 'merged', 'transcriped', 'analyzed'];
+const tabLabels = ['Transcript', 'Insights', 'Feedback'];
 
 const SingleRecording = () => {
   const [selectedTab, setSelectedTab] = useState('Transcript');
-  const tabLabels = ['Transcript', 'Insights', 'Feedback'];
+  const [currentTime, setCurrentTime] = useState(0);
+  const [wavesurfer, setWavesurfer] = useState(null);
+  const currentSegment = useRef(null);
+
+  // search query state
+  const [transcriptQuery, setTranscriptQuery] = useState(['']);
 
   // get recording id
   const params = useParams();
@@ -24,6 +33,7 @@ const SingleRecording = () => {
   const { data, isLoading, error } = useGetRecordingByIdQuery(id);
 
   const recording = data?.data;
+  const hasTranscript = recording && recording?.transcript && recording?.transcript?.segments?.length;
 
   const getStatusProgress = (status) => {
     return ((defaultStatus.indexOf(status) + 1) / defaultStatus.length) * 100;
@@ -33,6 +43,30 @@ const SingleRecording = () => {
     const RecoridngStatusIndex = defaultStatus.indexOf(recording?.status);
     return defaultStatus.indexOf(status) <= RecoridngStatusIndex ? true : false;
   };
+
+  // handles auto scroll to the current transcript segment
+  useEffect(() => {
+    if (currentSegment && currentSegment?.current) {
+      currentSegment.current?.scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
+  }, [currentSegment?.current, selectedTab]);
+
+  // handles search query change for transcript
+  const handleSearchChange = (e) => {
+    const { value } = e.target;
+    if (selectedTab !== 'Transcript') {
+      setSelectedTab('Transcript');
+    }
+    setTranscriptQuery(value.trim().split(' '));
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast(error?.data?.message || 'Something went wrong!', { type: 'error' });
+    }
+  }, [error]);
 
   return (
     <div className="singleRecordingPage">
@@ -81,45 +115,32 @@ const SingleRecording = () => {
         </div>
         <div className="bottom">
           {recording && (
-            <WaveAudio recording={recording}>
+            <WaveAudio
+              recording={recording}
+              setCurrentTime={setCurrentTime}
+              setRefrence={setWavesurfer}
+              refrence={wavesurfer}
+            >
               <div className="tabContent active">
-                <span className="duration">
-                  <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-                </span>
-                <p>
-                  What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                  Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                  but also the
-                </p>
-
-                <span className="duration">
-                  <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-                </span>
-                <p>
-                  What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                  Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                  but also the
-                </p>
-                <span className="duration">
-                  <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-                </span>
-                <p>
-                  What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                  Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                  galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                  but also the
-                </p>
+                {recording?.transcript?.segments
+                  ?.filter((s) => s.start <= currentTime && s.end >= currentTime)
+                  .map((seg, index) => (
+                    <React.Fragment key={index}>
+                      <span className="duration">
+                        <p>Start Time: {formatTime(seg.start)}</p> <p>End Time: {formatTime(seg.end)}</p>
+                      </span>
+                      <p>{seg.text}</p>
+                    </React.Fragment>
+                  ))}
               </div>
             </WaveAudio>
           )}
         </div>
       </div>
       <div className="right">
-        <div className="searchInputBox">
+        <div className={`searchInputBox ${!hasTranscript ? 'disabled' : ''}`}>
           <IoIosSearch className="icon" />
-          <input placeholder="Search Transcript" />
+          <input placeholder="Search Transcript" onChange={handleSearchChange} />
         </div>
         <div className="Tab">
           <div className="tabsWrapper">
@@ -143,53 +164,59 @@ const SingleRecording = () => {
           {/* Tab Content */}
           <>
             <div className={`tabContent ${selectedTab === 'Transcript' ? 'active' : ''}`}>
-              <span className="duration">
-                <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-              </span>
-              <p>
-                What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                but also the
-              </p>
-
-              <span className="duration">
-                <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-              </span>
-              <p>
-                What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                but also the
-              </p>
-              <span className="duration">
-                <p>Start Time: 12:43</p> <p>End Time: 12:57</p>
-              </span>
-              <p>
-                What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                but also the
-              </p>
+              {hasTranscript ? (
+                <RecordingTranscript
+                  recording={recording}
+                  query={transcriptQuery}
+                  applyFilter={true}
+                  currentTime={currentTime}
+                  currentSegment={currentSegment}
+                  wavesurfer={wavesurfer}
+                />
+              ) : (
+                <span className="emptyContent">
+                  <MdHourglassEmpty className="icon" />
+                  <p>Transcript still pending</p>
+                </span>
+              )}
             </div>
             <div className={`tabContent ${selectedTab === 'Insights' ? 'active' : ''}`}>
-              <span className="heading">
-                <p>Summary</p>
-              </span>
-              <p>
-                What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,
-                but also the
-              </p>
+              {recording?.insights ? (
+                <>
+                  <span className="heading">
+                    <p>Summary</p>
+                  </span>
+                  <p>
+                    What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+                    printer took a galley of type and scrambled it to make a type specimen book. It has survived not
+                    only five centuries, but also the
+                  </p>
+                </>
+              ) : (
+                <span className="emptyContent">
+                  <MdHourglassEmpty className="icon" />
+                  <p>Insights still pending</p>
+                </span>
+              )}
             </div>
             <div className={`tabContent ${selectedTab === 'Feedback' ? 'active' : ''}`}>
-              <span className="heading">
-                <p>Client Issue with the behaviour of sales man</p>
-              </span>
-              <p>
-                What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-              </p>
+              {recording?.insights ? (
+                <>
+                  <span className="heading">
+                    <p>Client Issue with the behaviour of sales man</p>
+                  </span>
+                  <p>
+                    What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                    Lorem
+                  </p>
+                </>
+              ) : (
+                <span className="emptyContent">
+                  <MdHourglassEmpty className="icon" />
+                  <p>Insights still pending</p>
+                </span>
+              )}
             </div>
           </>
         </div>

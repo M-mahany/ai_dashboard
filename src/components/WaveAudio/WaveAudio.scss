@@ -5,7 +5,6 @@
         position: absolute;
         left: 0;
         top: 0;
-        z-index: 10;
         pointer-events: none;
         height: 100%;
         width: 0;
@@ -13,6 +12,7 @@
         background: #ffc788e1;
         opacity: 0;
         transition: opacity 0.2s ease;
+        z-index: 10;
       }
       &:hover {
         #waveHover {
@@ -44,12 +44,38 @@
   overflow: hidden;
   padding: 9px;
   height: calc(100% - 18px);
+  &.disabled{
+    opacity: 0.5;
+    pointer-events: none;
+  }
   .waveAudioWrapper{
     border: 2px solid #ededed;
     border-radius: 12px;
     padding: 0px 12px;
     width: calc(100% - 28px);
     min-height: 130px;
+    .noPeaksTxt{
+      display: none;
+    }
+    &.disabled{
+      opacity: 0.6;
+      pointer-events: none;
+      position: relative;
+      .noPeaksTxt{
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 15;
+        font-weight: 600;
+        font-size: 14px;
+        color: #e53935;
+      }
+    }
   }
   .mediaControl{
     display: flex;
@@ -76,4 +102,21 @@
       }
     }
     }
+}
+.pendingRecording{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  .icon{
+    color: #c5c5c5;
+    font-size: 56px;
+  }
+  p{
+    margin-top: 12px;
+    color: #c5c5c5;
+    font-size: 16px;
+    font-weight: 500;
+  }
 }

@@ -43,4 +43,12 @@
             }
         }
     }
+    .observer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        color: var(--main);
+        margin-top: -24px;
+    }
 }
