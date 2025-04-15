@@ -17,7 +17,7 @@ const Register = () => {
           </div>
           <div className="usefulLink">
             <p>
-              Don't have an account? <Link href={'/auth/register'}>Register</Link>
+              Don&apos;t have an account? <Link href={'/auth/register'}>Register</Link>
             </p>
             <Link href={'/'}>Terms & Conditions</Link>
           </div>
