@@ -43,7 +43,10 @@ const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence 
       setProgress((time / duration) * 100);
     };
 
-    const onTimeUpdate = (time) => setCurrentTime(time);
+    const onTimeUpdate = (time) => {
+      setCurrentTime(time);
+      setProgress((time / duration) * 100);
+    };
 
     wavesurfer.on('interaction', onInteraction);
     wavesurfer.on('timeupdate', onTimeUpdate);

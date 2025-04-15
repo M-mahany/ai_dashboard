@@ -23,9 +23,9 @@ const DeviceActionButton = () => {
       <Popper id={id} open={open} anchorEl={anchorEl}>
         <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
           <div className="innerDeviceActionPopper">
-            <Button>details</Button>
-            <Button>Update App</Button>
+            <Button>system health</Button>
             <Button>update system</Button>
+            <Button>Update App</Button>
           </div>
         </ClickAwayListener>
       </Popper>

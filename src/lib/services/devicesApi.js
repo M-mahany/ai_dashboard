@@ -7,7 +7,10 @@ const enhancedApi = userRequestAPI.enhanceEndpoints({
 export const devicesApi = enhancedApi.injectEndpoints({
   endpoints: (build) => ({
     getMyDevices: build.query({
-      query: () => 'devices/mine',
+      query: (query = {}) => {
+        const searchQuery = new URLSearchParams(query);
+        return { url: `devices/mine?${searchQuery.toString()}` };
+      },
     }),
   }),
 });

@@ -2,15 +2,14 @@
 import { DataGrid } from '@mui/x-data-grid';
 import './Devices.scss';
 import { FaPlus } from 'react-icons/fa';
-import { Button, IconButton } from '@mui/material';
-import { useGetMyDevicesQuery } from '@/lib/services/devicesApi';
+import { Button } from '@mui/material';
 import dayjs from 'dayjs';
 import { GoDotFill } from 'react-icons/go';
-import { BsThreeDots } from 'react-icons/bs';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { HiOutlineServer } from 'react-icons/hi2';
 import DeviceActionButton from '@/components/DeviceActionButton/DeviceActionButton';
+import { useGetMyDevicesQuery } from '@/lib/services/devicesApi';
 
 const Devices = () => {
   const columns = [
@@ -60,12 +59,17 @@ const Devices = () => {
     },
   ];
 
-  const { data, isLoading, error } = useGetMyDevicesQuery();
-  const devices = data?.data ?? [];
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
   });
+
+  const { data, isLoading, error, isFetching } = useGetMyDevicesQuery({ page: paginationModel?.page + 1 });
+  const devices = data?.data?.devices ?? [];
+
+  const hasNextPage = data?.data?.total > devices?.length;
+
+  const paginationMetaRef = useRef({ hasNextPage: true });
 
   function getRowId(row) {
     return row._id;
@@ -88,6 +92,13 @@ const Devices = () => {
     }
   }, [error]);
 
+  const paginationMeta = useMemo(() => {
+    if (hasNextPage !== undefined && paginationMetaRef.current?.hasNextPage !== hasNextPage) {
+      paginationMetaRef.current = { hasNextPage };
+    }
+    return paginationMetaRef.current;
+  }, [hasNextPage]);
+
   return (
     <div className="devicePage">
       <span className="top">
@@ -106,11 +117,14 @@ const Devices = () => {
         rows={devices}
         columns={columns}
         sx={{ border: 0 }}
-        loading={isLoading}
+        loading={isLoading || isFetching}
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+        onRowCountChange={(count) => console.log('count', count)}
         paginationMode="server"
+        rowCount={data?.data?.total ?? 0}
+        paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        rowCount={10}
+        paginationMeta={paginationMeta}
         pageSizeOptions={[10]}
       />
     </div>
