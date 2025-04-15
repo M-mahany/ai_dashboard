@@ -9,7 +9,7 @@ const Register = () => {
     <div className="authPage">
       <div className="innerWrapper">
         <div className="authFormSection">
-          <span className="brandName">InStore AI</span>
+          <span className="brandName">PythiaStore</span>
           <div className="middleSection">
             <h1>Welcome Back</h1>
             <p className="subHead">Login and get all your store details</p>

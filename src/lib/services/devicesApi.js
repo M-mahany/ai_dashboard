@@ -4,12 +4,12 @@ const enhancedApi = userRequestAPI.enhanceEndpoints({
   addTagTypes: ['stores'],
 });
 
-export const storesApi = enhancedApi.injectEndpoints({
+export const devicesApi = enhancedApi.injectEndpoints({
   endpoints: (build) => ({
-    getMyStores: build.query({
-      query: () => 'stores/mine',
+    getMyDevices: build.query({
+      query: () => 'devices/mine',
     }),
   }),
 });
 
-export const { useGetMyStoresQuery } = storesApi;
+export const { useGetMyDevicesQuery } = devicesApi;

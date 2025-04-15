@@ -33,4 +33,24 @@
             padding: 7px 18px;
         }
     }
+    .status{
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+    }
+    .CustomNoRowsOverlay{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        color: gray;
+        .icon{
+            font-size: 42px;
+        }
+        p{
+            font-size: 18px;
+        }
+    }
 }
