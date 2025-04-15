@@ -1,7 +1,7 @@
 'use client';
 
 import FormInput from './FormInput/FormInput';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import RegisterButton from './RegisterButton';
 import LoginButton from './LoginButton';
 import ResetPasswordButton from './ResetPasswordButton';
@@ -46,7 +46,9 @@ const AuthForm = ({ type, form }) => {
         </>
       )}
       {type === 'reset-password' && (
-        <ResetPasswordButton data={data} setShowError={setShowError} formErrors={formErrors} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ResetPasswordButton data={data} setShowError={setShowError} formErrors={formErrors} />
+        </Suspense>
       )}
       {type === 'forgot-password' && (
         <ForgotPasswordButton data={data} setShowError={setShowError} formErrors={formErrors} />

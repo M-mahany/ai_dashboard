@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthResetPasswordMutation } from '@/lib/services/authApi';
 import { Button } from '@mui/material';
 import { redirect, useSearchParams } from 'next/navigation';
