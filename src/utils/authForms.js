@@ -5,6 +5,7 @@ export const registerForm = [
     label: 'First Name*',
     type: 'text',
     size: 'short',
+    isRequired: true,
   },
   {
     id: 2,
@@ -12,18 +13,20 @@ export const registerForm = [
     label: 'Last Name*',
     type: 'text',
     size: 'short',
+    isRequired: true,
   },
   {
     id: 3,
     name: 'email',
     label: 'Email*',
-    type: 'text',
+    type: 'email',
     size: '',
+    isRequired: true,
   },
   {
     id: 4,
     name: 'phone',
-    label: 'Phone*',
+    label: 'Phone',
     type: 'text',
     size: '',
   },
@@ -33,13 +36,16 @@ export const registerForm = [
     label: 'Password*',
     type: 'password',
     size: '',
+    isRequired: true,
   },
   {
     id: 4,
     name: 'confirmPassword',
-    label: 'Conform Password*',
+    label: 'Confirm Password*',
     type: 'password',
     size: '',
+    isRequired: true,
+    skipCheck: true,
   },
 ];
 
@@ -48,8 +54,9 @@ export const loginForm = [
     id: 1,
     name: 'email',
     label: 'Email*',
-    type: 'text',
+    type: 'email',
     size: '',
+    isRequired: true,
   },
   {
     id: 2,
@@ -57,16 +64,19 @@ export const loginForm = [
     label: 'Password*',
     type: 'password',
     size: '',
+    skipCheck: true,
+    isRequired: true,
   },
 ];
 
 export const resetPasswordForm = [
   {
     id: 1,
-    name: 'newPassword',
+    name: 'password',
     label: 'New Password*',
     type: 'password',
     size: '',
+    isRequired: true,
   },
   {
     id: 2,
@@ -74,6 +84,8 @@ export const resetPasswordForm = [
     label: 'Confirm Password*',
     type: 'password',
     size: '',
+    isRequired: true,
+    skipCheck: true,
   },
 ];
 
@@ -82,7 +94,8 @@ export const forgotPasswordForm = [
     id: 1,
     name: 'email',
     label: 'Email*',
-    type: 'text',
+    type: 'email',
     size: '',
+    isRequired: true,
   },
 ];

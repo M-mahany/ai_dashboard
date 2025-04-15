@@ -1,9 +1,9 @@
 export const mainLinks = [
-  {
-    id: 1,
-    name: 'Dashboard',
-    href: '/dashboard',
-  },
+  // {
+  //   id: 1,
+  //   name: 'Dashboard',
+  //   href: '/dashboard',
+  // },
   {
     id: 2,
     name: 'Recordings',

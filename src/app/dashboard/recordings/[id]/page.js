@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './SingleRecording.scss';
 import { IoIosSearch } from 'react-icons/io';
 import Image from 'next/image';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Skeleton } from '@mui/material';
 import { FaCircle } from 'react-icons/fa';
 import WaveAudio from '@/components/WaveAudio/WaveAudio';
 import { useGetRecordingByIdQuery } from '@/lib/services/recordingsApi';
@@ -13,6 +13,7 @@ import { formatTime } from '@/utils/helpers/time';
 import { MdHourglassEmpty } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import RecordingTranscript from '@/components/RecordingTranscript';
+import LoadingOverlay from '@/components/LoadingOverlay/LoadingOverlay';
 
 const defaultStatus = ['pending', 'merged', 'transcriped', 'analyzed'];
 const tabLabels = ['Transcript', 'Insights', 'Feedback'];
@@ -22,10 +23,8 @@ const SingleRecording = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [wavesurfer, setWavesurfer] = useState(null);
   const currentSegment = useRef(null);
-
   // search query state
   const [transcriptQuery, setTranscriptQuery] = useState(['']);
-
   // get recording id
   const params = useParams();
   const { id } = params;
@@ -73,34 +72,42 @@ const SingleRecording = () => {
       <div className="left">
         <div className="top">
           <div className="box">
-            <div className="DoughnutWrapper">
-              <CircularProgress
-                className="recordingProgress"
-                variant="determinate"
-                value={getStatusProgress(recording?.status)}
-                thickness={2}
-              />
-              <CircularProgress
-                className="progressPlaceholder"
-                variant="determinate"
-                value={100}
-                thickness={2}
-                sx={{ color: 'gray' }}
-              />
-              <span className="infoBox" style={{ position: 'absolute' }}>
-                <p className="bg">{getStatusProgress(recording?.status)}%</p>
-                <p className="smll">Completed</p>
-              </span>
-            </div>
-            <div className="detailedStatus">
-              {defaultStatus.slice(1, defaultStatus?.length).map((s, i) => (
-                <span className={`statusBullet ${isStatusCompleted(s) ? 'complete' : ''}`} key={i}>
-                  <FaCircle className="circle" />
-                  <p>
-                    {s} ({isStatusCompleted(s) ? 100 : 0}%)
-                  </p>
+            {isLoading ? (
+              <Skeleton variant="circular" width={130} height={130} />
+            ) : (
+              <div className="DoughnutWrapper">
+                <CircularProgress
+                  className="recordingProgress"
+                  variant="determinate"
+                  value={getStatusProgress(recording?.status)}
+                  thickness={2}
+                />
+                <CircularProgress
+                  className="progressPlaceholder"
+                  variant="determinate"
+                  value={100}
+                  thickness={2}
+                  sx={{ color: 'gray' }}
+                />
+                <span className="infoBox" style={{ position: 'absolute' }}>
+                  <p className="bg">{getStatusProgress(recording?.status)}%</p>
+                  <p className="smll">Completed</p>
                 </span>
-              ))}
+              </div>
+            )}
+            <div className="detailedStatus">
+              {defaultStatus.slice(1, defaultStatus?.length).map((s, i) =>
+                isLoading ? (
+                  <Skeleton variant="text" sx={{ fontSize: '1rem', width: '80px' }} key={i} />
+                ) : (
+                  <span className={`statusBullet ${isStatusCompleted(s) ? 'complete' : ''}`} key={i}>
+                    <FaCircle className="circle" />
+                    <p>
+                      {s} ({isStatusCompleted(s) ? 100 : 0}%)
+                    </p>
+                  </span>
+                )
+              )}
             </div>
           </div>
           <div className="box">
@@ -108,42 +115,64 @@ const SingleRecording = () => {
               <Image src="/assets/soundbites.png" alt="soundImg" layout="responsive" width={225} height={225} />
             </div>
             <span className="infoBox">
-              <p className="bg">{formatTime(recording?.duration ?? 0)}</p>
-              <p className="smll">Minutes {recording?.status}</p>
+              {isLoading ? (
+                <>
+                  <Skeleton variant="text" sx={{ fontSize: '2rem', width: '120px' }} />
+                  <Skeleton variant="text" sx={{ fontSize: '1rem', width: '80px' }} />
+                </>
+              ) : (
+                <>
+                  <p className="bg">{formatTime(recording?.duration ?? 0)}</p>
+                  <p className="smll">Minutes {recording?.status}</p>
+                </>
+              )}
             </span>
           </div>
         </div>
         <div className="bottom">
-          {recording && (
-            <WaveAudio
-              recording={recording}
-              setCurrentTime={setCurrentTime}
-              setRefrence={setWavesurfer}
-              refrence={wavesurfer}
-            >
+          {isLoading ? (
+            <div className="audioWithTranscript">
+              <Skeleton variant="rounded" width={'100%'} height={125} />
               <div className="tabContent active">
-                {recording?.transcript?.segments
-                  ?.filter((s) => s.start <= currentTime && s.end >= currentTime)
-                  .map((seg, index) => (
-                    <React.Fragment key={index}>
-                      <span className="duration">
-                        <p>Start Time: {formatTime(seg.start)}</p> <p>End Time: {formatTime(seg.end)}</p>
-                      </span>
-                      <p>{seg.text}</p>
-                    </React.Fragment>
-                  ))}
+                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
+                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
+                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} />
               </div>
-            </WaveAudio>
+
+              <Skeleton variant="rounded" width={'100%'} height={60} />
+            </div>
+          ) : (
+            recording && (
+              <WaveAudio
+                recording={recording}
+                setCurrentTime={setCurrentTime}
+                setRefrence={setWavesurfer}
+                refrence={wavesurfer}
+              >
+                <div className="tabContent active">
+                  {recording?.transcript?.segments
+                    ?.filter((s) => s.start <= currentTime && s.end >= currentTime)
+                    .map((seg, index) => (
+                      <React.Fragment key={index}>
+                        <span className="duration">
+                          <p>Start Time: {formatTime(seg.start)}</p> <p>End Time: {formatTime(seg.end)}</p>
+                        </span>
+                        <p>{seg.text}</p>
+                      </React.Fragment>
+                    ))}
+                </div>
+              </WaveAudio>
+            )
           )}
         </div>
       </div>
       <div className="right">
-        <div className={`searchInputBox ${!hasTranscript ? 'disabled' : ''}`}>
+        <div className={`searchInputBox ${!hasTranscript || isLoading ? 'disabled' : ''}`}>
           <IoIosSearch className="icon" />
           <input placeholder="Search Transcript" onChange={handleSearchChange} />
         </div>
         <div className="Tab">
-          <div className="tabsWrapper">
+          <div className={`tabsWrapper ${isLoading ? 'disabled' : ''}`}>
             <div className="tabsLabels">
               {tabLabels.map((label, i) => (
                 <span className="tabLabel" key={i} onClick={() => setSelectedTab(label)}>
@@ -162,63 +191,71 @@ const SingleRecording = () => {
             </span>
           </div>
           {/* Tab Content */}
-          <>
-            <div className={`tabContent ${selectedTab === 'Transcript' ? 'active' : ''}`}>
-              {hasTranscript ? (
-                <RecordingTranscript
-                  recording={recording}
-                  query={transcriptQuery}
-                  applyFilter={true}
-                  currentTime={currentTime}
-                  currentSegment={currentSegment}
-                  wavesurfer={wavesurfer}
-                />
-              ) : (
-                <span className="emptyContent">
-                  <MdHourglassEmpty className="icon" />
-                  <p>Transcript still pending</p>
-                </span>
-              )}
-            </div>
-            <div className={`tabContent ${selectedTab === 'Insights' ? 'active' : ''}`}>
-              {recording?.insights ? (
-                <>
-                  <span className="heading">
-                    <p>Summary</p>
+          {isLoading ? (
+            <span>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '100%' }} key={i} />
+              ))}
+            </span>
+          ) : (
+            <>
+              <div className={`tabContent ${selectedTab === 'Transcript' ? 'active' : ''}`}>
+                {hasTranscript ? (
+                  <RecordingTranscript
+                    recording={recording}
+                    query={transcriptQuery}
+                    applyFilter={true}
+                    currentTime={currentTime}
+                    currentSegment={currentSegment}
+                    wavesurfer={wavesurfer}
+                  />
+                ) : (
+                  <span className="emptyContent">
+                    <MdHourglassEmpty className="icon" />
+                    <p>Transcript still pending</p>
                   </span>
-                  <p>
-                    What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-                    only five centuries, but also the
-                  </p>
-                </>
-              ) : (
-                <span className="emptyContent">
-                  <MdHourglassEmpty className="icon" />
-                  <p>Insights still pending</p>
-                </span>
-              )}
-            </div>
-            <div className={`tabContent ${selectedTab === 'Feedback' ? 'active' : ''}`}>
-              {recording?.insights ? (
-                <>
-                  <span className="heading">
-                    <p>Client Issue with the behaviour of sales man</p>
+                )}
+              </div>
+              <div className={`tabContent ${selectedTab === 'Insights' ? 'active' : ''}`}>
+                {recording?.insights ? (
+                  <>
+                    <span className="heading">
+                      <p>Summary</p>
+                    </span>
+                    <p>
+                      What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+                      printer took a galley of type and scrambled it to make a type specimen book. It has survived not
+                      only five centuries, but also the
+                    </p>
+                  </>
+                ) : (
+                  <span className="emptyContent">
+                    <MdHourglassEmpty className="icon" />
+                    <p>Insights still pending</p>
                   </span>
-                  <p>
-                    What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem
-                  </p>
-                </>
-              ) : (
-                <span className="emptyContent">
-                  <MdHourglassEmpty className="icon" />
-                  <p>Insights still pending</p>
-                </span>
-              )}
-            </div>
-          </>
+                )}
+              </div>
+              <div className={`tabContent ${selectedTab === 'Feedback' ? 'active' : ''}`}>
+                {recording?.insights ? (
+                  <>
+                    <span className="heading">
+                      <p>Client Issue with the behaviour of sales man</p>
+                    </span>
+                    <p>
+                      What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                      Lorem
+                    </p>
+                  </>
+                ) : (
+                  <span className="emptyContent">
+                    <MdHourglassEmpty className="icon" />
+                    <p>Insights still pending</p>
+                  </span>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

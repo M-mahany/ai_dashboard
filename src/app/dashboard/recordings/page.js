@@ -4,8 +4,10 @@ import './Recordings.scss';
 import { useGetAllRecordingsQuery } from '@/lib/services/recordingsApi';
 import Modals from '@/components/Modals/Modals';
 import { useEffect, useRef, useState } from 'react';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Skeleton } from '@mui/material';
 import { FaAnglesDown } from 'react-icons/fa6';
+import { CiNoWaitingSign } from 'react-icons/ci';
+import { toast } from 'react-toastify';
 
 const Recordings = () => {
   const [modal, setModal] = useState(null);
@@ -35,6 +37,13 @@ const Recordings = () => {
     return () => observer.disconnect();
   }, [isFetching, hasMore]);
 
+  useEffect(() => {
+    if (error) {
+      toast(error?.data?.message || error || 'Error Fetching Recordings', {
+        type: 'error',
+      });
+    }
+  }, [error]);
   return (
     <div className="recordingPage">
       <Modals modal={modal} setModal={setModal} />
@@ -46,18 +55,33 @@ const Recordings = () => {
               <p key={i}>{h}</p>
             ))}
           </div>
-          {recordings
-            ?.filter((r) => r.status === recordingStatus || (recordingStatus !== 'pending' && r.status !== 'pending'))
-            .map((recording, i) => (
-              <RecordingBox key={i} recording={recording} setModal={setModal} />
-            ))}
+          {isLoading
+            ? Array.from({ length: 2 }).map((_, i) => (
+                <Skeleton variant="rounded" width={'100%'} height={74} key={i} style={{ marginBottom: '14px' }} />
+              ))
+            : (() => {
+                const filteredRecordings = recordings?.filter(
+                  (r) => r.status === recordingStatus || (recordingStatus !== 'pending' && r.status !== 'pending')
+                );
+
+                return filteredRecordings?.length ? (
+                  filteredRecordings.map((recording, i) => (
+                    <RecordingBox key={i} recording={recording} setModal={setModal} />
+                  ))
+                ) : (
+                  <span className="emptyGroup">
+                    <CiNoWaitingSign className="icon" />
+                    No {recordingStatus} recordings
+                  </span>
+                );
+              })()}
         </div>
       ))}
       {recordings?.length && hasMore ? (
         <span className="observer" ref={observerRef}>
           {isFetching ? (
             <>
-              <CircularProgress /> Loading more...
+              <CircularProgress style={{ width: '20px', height: '20px', color: 'var(--secondary)' }} /> Loading more...
             </>
           ) : (
             <>

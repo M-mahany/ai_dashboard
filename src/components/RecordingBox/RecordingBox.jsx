@@ -34,7 +34,11 @@ const RecordingBox = ({ recording, setModal }) => {
           props={{ className: 'iconBttn', disabled: recording?.status === 'pending' ? true : false }}
           recordingId={recording?._id}
         />
-        <IconButton className="iconBttn delete" onClick={handleDelete}>
+        <IconButton
+          className="iconBttn delete"
+          onClick={handleDelete}
+          disabled={recording?.status === 'pending' ? true : false}
+        >
           <MdDelete className="icon" />
         </IconButton>
       </div>

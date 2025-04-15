@@ -33,7 +33,7 @@ const DeleteRecordingModal = ({ setModal, modal }) => {
       toast(message, { type });
       setTimeout(() => {
         setModal(null);
-      }, 3000);
+      }, 1000);
     }
   }, [error, data]);
 

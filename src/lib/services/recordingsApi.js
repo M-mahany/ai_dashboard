@@ -42,11 +42,22 @@ export const recordingsApi = enhancedApi.injectEndpoints({
           const peaks = response?.data?.peaks ?? [];
           const maxAbs = Math.max(...peaks.map((p) => Math.abs(p))) || 1;
           const normalizedPeaks = peaks.map((p) => p / maxAbs);
+          let sortedTranscript = {};
+          if (response?.data?.status !== 'pending' && response?.data?.transcript) {
+            sortedTranscript = {
+              transcript: {
+                ...response?.data?.transcript,
+                segments: [...response?.data?.transcript.segments].sort((a, b) => a.start - b.start),
+              },
+            };
+          }
+
           return {
             ...response,
             data: {
               ...response?.data,
               peaks: normalizedPeaks,
+              ...sortedTranscript,
             },
           };
         }
@@ -64,6 +75,23 @@ export const recordingsApi = enhancedApi.injectEndpoints({
         method: 'DELETE',
       }),
       invalidatesTags: ['recordings'],
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+
+          // Optimistically update the getAllRecordings cache
+          dispatch(
+            recordingsApi.util.updateQueryData('getAllRecordings', {}, (draft) => {
+              if (draft?.data?.recordings) {
+                draft.data.recordings = draft.data.recordings.filter((rec) => rec._id !== id);
+                draft.data.totalCount = (draft.data.totalCount || 1) - 1;
+              }
+            })
+          );
+        } catch (err) {
+          console.error('Failed to delete recording or update cache:', err);
+        }
+      },
     }),
   }),
 });
