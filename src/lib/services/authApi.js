@@ -42,7 +42,21 @@ export const authApi = enhancedApi.injectEndpoints({
         },
       }),
     }),
+    authResetPassword: build.mutation({
+      query: ({ token, password }) => ({
+        url: `auth/reset-password/${token}`,
+        method: 'PUT',
+        body: {
+          newPassword: password,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useAuthLoginMutation, useAuthRegisterMutation, useAuthForgotPasswordMutation } = authApi;
+export const {
+  useAuthLoginMutation,
+  useAuthRegisterMutation,
+  useAuthForgotPasswordMutation,
+  useAuthResetPasswordMutation,
+} = authApi;
