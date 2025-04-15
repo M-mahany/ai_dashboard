@@ -29,7 +29,7 @@ export const recordingsApi = enhancedApi.injectEndpoints({
       },
       // Refetch when the page arg changes
       forceRefetch({ currentArg, previousArg }) {
-        return currentArg?.page !== previousArg?.page;
+        return currentArg !== previousArg;
       },
       providesTags: ['recordings'],
     }),

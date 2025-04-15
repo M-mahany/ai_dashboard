@@ -1,5 +1,36 @@
 .devicePage{
     flex-grow: 1;
     display: flex;
-    max-width: 100%;
+    flex-direction: column;
+    max-width: calc(100% - 48px);
+    padding: 24px;
+    .top{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-bottom: 1px solid #4666a73b;
+        padding-bottom: 32px;
+        margin-bottom: 32px;
+        h1{
+            color: var(--main);
+            font-family: "Roboto", sans-serif;
+            font-weight: 600;
+        }
+        p{
+            font-weight: 500;
+            color: var(--main);
+            font-size: 14px;
+        }
+        button{
+            background-color: var(--main);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border-radius: 6px;
+            text-transform: capitalize;
+            padding: 7px 18px;
+        }
+    }
 }

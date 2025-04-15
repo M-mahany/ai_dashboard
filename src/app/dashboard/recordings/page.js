@@ -8,17 +8,22 @@ import { CircularProgress, Skeleton } from '@mui/material';
 import { FaAnglesDown } from 'react-icons/fa6';
 import { CiNoWaitingSign } from 'react-icons/ci';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 const Recordings = () => {
   const [modal, setModal] = useState(null);
   const header = ['', 'Name', 'Duration', 'Date', 'Status', 'Actions'];
   const mainRecordingStatus = ['pending', 'processed'];
+  const store = useSelector((state) => state.store);
 
   //API state
   const observerRef = useRef();
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isFetching, error } = useGetAllRecordingsQuery({ page });
+  const { data, isLoading, isFetching, error } = useGetAllRecordingsQuery(
+    { page, storeId: store?._id },
+    { skip: !store?._id }
+  );
   const recordings = data ? data?.data?.recordings : [];
   const hasMore = data?.data?.total > recordings?.length;
 

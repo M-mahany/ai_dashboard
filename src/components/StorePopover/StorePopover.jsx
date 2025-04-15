@@ -1,15 +1,23 @@
 'use client';
 
-import { Avatar, Button, Divider, Popover } from '@mui/material';
-import { useState } from 'react';
+import { Avatar, Button, Popover, Skeleton } from '@mui/material';
+import { useEffect, useState } from 'react';
 import './StorePopover.scss';
 import { FaChevronDown } from 'react-icons/fa6';
 import { FiPlus } from 'react-icons/fi';
+import { useGetMyStoresQuery } from '@/lib/services/storesApi';
 import { LuStore } from 'react-icons/lu';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setStore } from '@/lib/features/storeSlice';
 
 const StorePopover = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedStore, setSelectedStore] = useState('TestStore1');
+  const [selectedStore, setSelectedStore] = useState(null);
+  const dispatch = useDispatch();
+  const { data, isLoading, error } = useGetMyStoresQuery();
+
+  const stores = data?.data ?? [];
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -22,45 +30,68 @@ const StorePopover = () => {
   const open = Boolean(anchorEl);
   const id = open ? 'store-popover' : undefined;
 
+  useEffect(() => {
+    if (error) {
+      toast(error?.data?.message || error || 'Error Fetching Stores', {
+        type: 'error',
+      });
+    }
+    if (data) {
+      setSelectedStore(stores[0]);
+    }
+  }, [data, error]);
+
+  useEffect(() => {
+    if (selectedStore) {
+      dispatch(setStore(selectedStore));
+    }
+  }, [selectedStore]);
+
   return (
     <>
-      <Button aria-describedby={id} id="storeButton" onClick={handleClick}>
-        <Avatar
-          sx={{ bgcolor: 'var(--secondary)' }}
-          style={{ width: '28px', height: '28px', color: 'var(--main)', fontSize: '16px' }}
-        >
-          T
-        </Avatar>
-        <span className="storeName">{selectedStore}</span>
-        <FaChevronDown className="icon" />
-      </Button>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <div id="popverMenu">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Button
-              key={i}
-              onClick={() => setSelectedStore(`TestStore${i + 1}`)}
-              className={selectedStore === `TestStore${i + 1}` ? 'active' : ''}
+      {isLoading ? (
+        <Skeleton variant="text" sx={{ fontSize: '2.5rem', width: '100%' }} />
+      ) : (
+        <>
+          <Button aria-describedby={id} id="storeButton" onClick={handleClick}>
+            <Avatar
+              sx={{ bgcolor: 'var(--secondary)' }}
+              style={{ width: '28px', height: '28px', color: 'var(--main)', fontSize: '16px' }}
             >
-              <LuStore />
-              TestStore{i + 1}
-            </Button>
-          ))}
-          <Button>
-            <FiPlus />
-            Add New Store
+              T
+            </Avatar>
+            <span className="storeName">{selectedStore?.name}</span>
+            <FaChevronDown className="icon" />
           </Button>
-        </div>
-      </Popover>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+          >
+            <div id="popverMenu">
+              {stores?.map((store, i) => (
+                <Button
+                  key={i}
+                  onClick={() => setSelectedStore(store)}
+                  className={selectedStore?.name === store?.name ? 'active' : ''}
+                >
+                  <LuStore />
+                  {store?.name}
+                </Button>
+              ))}
+              <Button>
+                <FiPlus />
+                Add New Store
+              </Button>
+            </div>
+          </Popover>
+        </>
+      )}
     </>
   );
 };

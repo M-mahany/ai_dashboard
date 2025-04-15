@@ -17,11 +17,9 @@ const ForgotPasswordButton = ({ data, setShowError, formErrors }) => {
 
   useEffect(() => {
     if (authData) {
-      console.log(authData);
       toast(authData?.message || 'Reset link sent to your email', { type: 'success' });
     }
     if (error) {
-      console.log(error);
       toast(error?.data?.message || 'Unknown Error!', { type: 'error' });
     }
   }, [error, authData]);
