@@ -10,6 +10,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { HiOutlineServer } from 'react-icons/hi2';
+import DeviceActionButton from '@/components/DeviceActionButton/DeviceActionButton';
 
 const Devices = () => {
   const columns = [
@@ -50,12 +51,10 @@ const Devices = () => {
     {
       field: null,
       headerName: '',
-      width: 140,
+      width: 75,
       renderCell: () => (
-        <span>
-          <IconButton>
-            <BsThreeDots />
-          </IconButton>
+        <span className="actionCell">
+          <DeviceActionButton />
         </span>
       ),
     },
@@ -102,6 +101,7 @@ const Devices = () => {
       </span>
 
       <DataGrid
+        disableRowSelectionOnClick
         getRowId={getRowId}
         rows={devices}
         columns={columns}
