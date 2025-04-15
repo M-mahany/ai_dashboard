@@ -2,13 +2,21 @@ import { formatTime } from '@/utils/helpers/time';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 
-const TranscriptSegment = ({ segment, currentTime, currentSegment, query, handleSegementClick }) => {
+const TranscriptSegment = ({
+  segment,
+  currentTime,
+  currentSegment,
+  query,
+  handleSegementClick,
+  activeSegmentIndex,
+  index,
+}) => {
   const matches = match(segment.text, query.join(' '), { insideWords: true });
   const parts = parse(segment.text, matches);
 
   return (
     <div
-      ref={segment.start <= currentTime && segment.end >= currentTime ? currentSegment : null}
+      ref={activeSegmentIndex === index ? currentSegment : null}
       className={`segmentWrapper ${segment.start <= currentTime && segment.end >= currentTime ? 'active' : ''}`}
       onClick={() => handleSegementClick(segment.start)}
     >
