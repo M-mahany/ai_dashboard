@@ -51,9 +51,9 @@ const Devices = () => {
       field: null,
       headerName: '',
       width: 75,
-      renderCell: () => (
+      renderCell: (params) => (
         <span className="actionCell">
-          <DeviceActionButton />
+          <DeviceActionButton device={params} />
         </span>
       ),
     },
@@ -119,7 +119,6 @@ const Devices = () => {
         sx={{ border: 0 }}
         loading={isLoading || isFetching}
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-        onRowCountChange={(count) => console.log('count', count)}
         paginationMode="server"
         rowCount={data?.data?.total ?? 0}
         paginationModel={paginationModel}

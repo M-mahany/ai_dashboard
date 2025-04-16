@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SingleRecording.scss';
 import { IoIosSearch } from 'react-icons/io';
 import Image from 'next/image';
-import { CircularProgress, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import { FaCircle } from 'react-icons/fa';
 import WaveAudio from '@/components/WaveAudio/WaveAudio';
 import { useGetRecordingByIdQuery } from '@/lib/services/recordingsApi';
@@ -13,6 +13,7 @@ import { formatTime } from '@/utils/helpers/time';
 import { MdHourglassEmpty } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import RecordingTranscript from '@/components/RecordingTranscript';
+import Doughnut from '@/components/Doughnut/Doughnut';
 
 const defaultStatus = ['pending', 'merged', 'transcriped', 'analyzed'];
 const tabLabels = ['Transcript', 'Insights', 'Feedback'];
@@ -65,25 +66,7 @@ const SingleRecording = () => {
             {isLoading ? (
               <Skeleton variant="circular" width={130} height={130} />
             ) : (
-              <div className="DoughnutWrapper">
-                <CircularProgress
-                  className="recordingProgress"
-                  variant="determinate"
-                  value={getStatusProgress(recording?.status)}
-                  thickness={2}
-                />
-                <CircularProgress
-                  className="progressPlaceholder"
-                  variant="determinate"
-                  value={100}
-                  thickness={2}
-                  sx={{ color: 'gray' }}
-                />
-                <span className="infoBox" style={{ position: 'absolute' }}>
-                  <p className="bg">{getStatusProgress(recording?.status)}%</p>
-                  <p className="smll">Completed</p>
-                </span>
-              </div>
+              <Doughnut value={getStatusProgress(recording?.status)} txt={'Complete'} />
             )}
             <div className="detailedStatus">
               {defaultStatus.slice(1, defaultStatus?.length).map((s, i) =>

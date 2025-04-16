@@ -1,0 +1,38 @@
+.DoughnutWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 130px;
+    height: 130px;
+    .recordingProgress{
+        position: relative;
+        z-index: 5;
+        width: 100% !important;
+        height: 100% !important;
+        color: var(--secondary);
+    }
+    .progressPlaceholder{
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100% !important;
+        height: 100% !important;
+        color:#e1e1e1;
+        z-index: 0;
+    }
+    .infoBox{
+        position: absolute;
+        z-index: 0;
+            .bg{
+                color: var(--main);
+                font-size: 32px;
+            }
+            .smll{
+                color: var(--main);
+                font-size: 12px;
+        }
+    }
+}
