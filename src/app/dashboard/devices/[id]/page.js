@@ -1,14 +1,112 @@
 'use client';
+
 import { Button } from '@mui/material';
 import './SingleDevice.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TiFlowParallel } from 'react-icons/ti';
 import Doughnut from '@/components/Doughnut/Doughnut';
+import DeviceHealthBox from '@/components/DeviceHealthBox/DeviceHealthBox';
+import { useParams } from 'next/navigation';
+import { useGetDeviceHealthQuery } from '@/lib/services/devicesApi';
+import { BsCpu } from 'react-icons/bs';
+import { CiTempHigh } from 'react-icons/ci';
+import { BsDeviceSsd } from 'react-icons/bs';
+import { PiMemory } from 'react-icons/pi';
+import { LuTimer } from 'react-icons/lu';
+import { toast } from 'react-toastify';
+import DeviceLogsTerminal from '@/components/DeviceLogsTerminal/DeviceLogsTerminal';
 
 const SingleDevice = () => {
+  const [activeTab, setActiveTab] = useState('health');
   const tabs = ['health', 'logs'];
 
-  const [activeTab, setActiveTab] = useState('health');
+  // get recording id
+  const params = useParams();
+  const { id } = params;
+
+  const { data, isLoading, error } = useGetDeviceHealthQuery(id);
+
+  const systemHealth = data?.data;
+
+  const sectionOne = [
+    {
+      headerName: 'Cpu Count',
+      field: 'cpuCount',
+      icon: <BsCpu className="icon" />,
+    },
+    {
+      headerName: 'Cpu Temp',
+      field: 'cpuTemp',
+      icon: <CiTempHigh className="icon" />,
+    },
+    {
+      headerName: 'GPU Temp',
+      field: 'gpuTemp',
+      icon: <CiTempHigh className="icon" />,
+    },
+    {
+      headerName: 'Uptime',
+      field: 'uptime',
+      icon: <LuTimer className="icon" />,
+    },
+  ];
+
+  const sectionTwo = (props) => {
+    return [
+      {
+        headerName: 'Total Memory',
+        field: 'totalMemory',
+        icon: <PiMemory className="icon" />,
+      },
+      {
+        headerName: 'Memory Used',
+        field: 'usedMemory',
+        icon: <PiMemory className="icon" />,
+      },
+      {
+        headerName: 'Memory Free',
+        field: null,
+        customFiled: `${parseFloat(props.totalMemory) - parseFloat(props.usedMemory)}GB`,
+        icon: <PiMemory className="icon" />,
+      },
+    ];
+  };
+
+  const sectionThree = (props) => {
+    return [
+      {
+        headerName: 'Disk Used',
+        field: 'usedSpace',
+        icon: <BsDeviceSsd className="icon" />,
+      },
+      {
+        headerName: 'Disk Available',
+        field: 'avaiableSpace',
+        icon: <BsDeviceSsd className="icon" />,
+      },
+      {
+        headerName: 'Reserved Space',
+        field: null,
+        customFiled: `${(
+          parseFloat(props.totalSpace) -
+          parseFloat(props.avaiableSpace) -
+          parseFloat(props.usedSpace)
+        ).toFixed(2)} GB`,
+        icon: <BsDeviceSsd className="icon" />,
+      },
+      {
+        headerName: 'Total Disk Space',
+        field: 'totalSpace',
+        icon: <BsDeviceSsd className="icon" />,
+      },
+    ];
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast(error?.data?.message || 'Something went wrong!', { type: 'error' });
+    }
+  }, [error]);
 
   return (
     <div className="singleDevicePage">
@@ -35,100 +133,69 @@ const SingleDevice = () => {
         <div className={`tabContent ${activeTab === 'health' ? 'active' : ''}`}>
           <div className="mainSection">
             <div className="healthBox">
-              <p className="title">CPU stats</p>
+              <p className="title">CPU Stats</p>
               <div className="innerBoxes">
-                <div className="innerBox doughnut">
-                  <Doughnut value={50} thickness={2.5} />
+                <div className="DeviceHealthBox doughnut">
+                  <Doughnut value={parseFloat(systemHealth?.cpuUsage ?? 0)} thickness={2.5} />
                   <p className="info smll">CPU Utilization</p>
                 </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Frequency</p>
-                    <p className="info">4</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Count</p>
-                    <p className="info">4</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Temprature</p>
-                    <p className="info">53.6 °C</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
+                {systemHealth &&
+                  sectionOne?.map((sec, index) => (
+                    <DeviceHealthBox
+                      title={sec?.headerName}
+                      value={systemHealth[sec?.field]}
+                      icon={sec?.icon || <TiFlowParallel className="icon" />}
+                      key={index}
+                    />
+                  ))}
               </div>
             </div>
           </div>
+
           <div className="mainSection">
             <div className="healthBox">
-              <p className="title">Memory stats</p>
+              <p className="title">Memory Stats</p>
               <div className="innerBoxes">
-                <div className="innerBox doughnut">
-                  <Doughnut value={50} thickness={2.5} />
-                  <p className="info smll">CPU Utilization</p>
+                <div className="DeviceHealthBox doughnut">
+                  <Doughnut value={parseFloat(systemHealth?.memoryUsage ?? 0)} thickness={2.5} />
+                  <p className="info smll">Memory Usage</p>
                 </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Frequency</p>
-                    <p className="info">4</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Count</p>
-                    <p className="info">4</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Temprature</p>
-                    <p className="info">53.6 °C</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
+                {systemHealth &&
+                  sectionTwo(systemHealth)?.map((sec, index) => (
+                    <DeviceHealthBox
+                      title={sec?.headerName}
+                      value={sec?.field === null ? sec.customFiled : systemHealth[sec?.field]}
+                      icon={sec?.icon || <TiFlowParallel className="icon" />}
+                      key={index}
+                    />
+                  ))}
               </div>
             </div>
           </div>
+
           <div className="mainSection smll">
             <div className="healthBox">
-              <p className="title">Disk stats</p>
+              <p className="title">Disk Stats</p>
               <div className="innerBoxes">
-                <div className="innerBox doughnut">
-                  <Doughnut value={50} thickness={2.5} />
-                  <p className="info smll">CPU Utilization</p>
+                <div className="DeviceHealthBox doughnut">
+                  <Doughnut value={parseFloat(systemHealth?.diskUsage ?? 0)} thickness={2.5} />
+                  <p className="info smll">Disk Utilization</p>
                 </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Frequency</p>
-                    <p className="info">4</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Count</p>
-                    <p className="info">4</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
-                <div className="innerBox">
-                  <span>
-                    <p className="innerTitle">Cpu Temprature</p>
-                    <p className="info">53.6 °C</p>
-                  </span>
-                  <TiFlowParallel className="icon" />
-                </div>
+                {systemHealth &&
+                  sectionThree(systemHealth)?.map((sec, index) => (
+                    <DeviceHealthBox
+                      title={sec?.headerName}
+                      value={sec?.field === null ? sec.customFiled : systemHealth[sec?.field]}
+                      icon={sec?.icon || <TiFlowParallel className="icon" />}
+                      key={index}
+                    />
+                  ))}
               </div>
             </div>
           </div>
+        </div>
+        <div className={`tabContent ${activeTab === 'logs' ? 'active' : ''}`}>
+          <DeviceLogsTerminal skipApi={activeTab !== 'logs'} deviceId={id} />
         </div>
       </div>
     </div>

@@ -1,0 +1,45 @@
+.DeviceHealthBox{
+    background-color: rgba(131, 143, 169, 0.082);
+    border-radius: 12px;
+    padding: 24px 14px;
+    flex: 1;
+    min-width: 135px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &.doughnut{
+        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+        background-color: transparent;
+        padding: 0px 14px;
+        .DoughnutWrapper{
+            width: 115px;
+            height: 115px;
+            .recordingProgress{
+                color:var(--main);
+            }
+            .infoBox .bg {
+                font-size: 24px;
+            }
+        }
+    }
+    .icon{
+        color:#313131;
+        font-size: 28px;
+    }
+    .innerTitle{
+        color: #31313176;
+        margin-bottom: 22px;
+        font-weight: 700;
+        font-size: 18px;
+    }
+    .info{
+        color:#313131;
+        font-weight: 700;
+        font-size: 22px;
+        &.smll{
+            font-size: 16px;
+        }
+    }
+}

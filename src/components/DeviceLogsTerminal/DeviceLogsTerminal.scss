@@ -1,0 +1,23 @@
+.terminalContainer{
+    background-color: #1e1e1e;
+    padding: 12px;
+    flex: 1;
+    overflow: auto;
+    color: white;
+    max-height: calc(100% - 24px);
+    overflow: auto;
+    .logLine{
+        margin-bottom: 12px;
+        .level{
+            &.INFO{
+                color: #569CD6;
+            }
+            &.WARN{
+                color: #D7BA7D;
+            }
+            &.ERROR{
+                color: #F44747;
+            }
+        }
+    }
+}

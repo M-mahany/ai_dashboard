@@ -12,7 +12,13 @@ export const devicesApi = enhancedApi.injectEndpoints({
         return { url: `devices/mine?${searchQuery.toString()}` };
       },
     }),
+    getDeviceHealth: build.query({
+      query: (id) => `devices/${id}/system-health`,
+    }),
+    getDeviceLogs: build.query({
+      query: (id) => `devices/${id}/logs`,
+    }),
   }),
 });
 
-export const { useGetMyDevicesQuery } = devicesApi;
+export const { useGetMyDevicesQuery, useGetDeviceHealthQuery, useGetDeviceLogsQuery } = devicesApi;
