@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@mui/material';
 import './SingleDevice.scss';
 import { useEffect, useState } from 'react';
 import { TiFlowParallel } from 'react-icons/ti';
@@ -15,6 +14,7 @@ import { PiMemory } from 'react-icons/pi';
 import { LuTimer } from 'react-icons/lu';
 import { toast } from 'react-toastify';
 import DeviceLogsTerminal from '@/components/DeviceLogsTerminal/DeviceLogsTerminal';
+import DeviceUpdateButton from '@/components/DeviceUpdateButton/DeviceUpdateButton';
 
 const SingleDevice = () => {
   const [activeTab, setActiveTab] = useState('health');
@@ -66,7 +66,7 @@ const SingleDevice = () => {
       {
         headerName: 'Memory Free',
         field: null,
-        customFiled: `${parseFloat(props.totalMemory) - parseFloat(props.usedMemory)}GB`,
+        customFiled: `${(parseFloat(props.totalMemory) - parseFloat(props.usedMemory)).toFixed(2)}GB`,
         icon: <PiMemory className="icon" />,
       },
     ];
@@ -118,8 +118,7 @@ const SingleDevice = () => {
           </p>
         </span>
         <span className="bttnsWrapper">
-          <Button>Update System</Button>
-          <Button>Update app</Button>
+          <DeviceUpdateButton type={'system'} deviceId={id} /> <DeviceUpdateButton type={'app'} isLight deviceId={id} />
         </span>
       </span>
       <div className="tabsContainer">

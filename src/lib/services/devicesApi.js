@@ -1,7 +1,7 @@
 import { userRequestAPI } from './mainApi';
 
 const enhancedApi = userRequestAPI.enhanceEndpoints({
-  addTagTypes: ['stores'],
+  addTagTypes: ['devices'],
 });
 
 export const devicesApi = enhancedApi.injectEndpoints({
@@ -16,9 +16,40 @@ export const devicesApi = enhancedApi.injectEndpoints({
       query: (id) => `devices/${id}/system-health`,
     }),
     getDeviceLogs: build.query({
-      query: (id) => `devices/${id}/logs`,
+      query: ({ id, query = {} }) => {
+        const searchQuery = new URLSearchParams(query);
+        return { url: `devices/${id}/logs?${searchQuery?.toString()}` };
+      },
+      serializeQueryArgs: ({ endpointName }) => endpointName,
+      merge: (currentCache, newItems, { arg }) => {
+        if (arg.query.page > 1) {
+          const cacheArray = currentCache?.data?.logs || [];
+          const newdata = newItems?.data?.logs;
+          return {
+            ...newItems,
+            data: {
+              ...newItems.data,
+              logs: [...cacheArray, ...newdata],
+            },
+          };
+        } else {
+          return newItems;
+        }
+      },
+      // Refetch when the page arg changes
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg !== previousArg;
+      },
+    }),
+
+    updateDevice: build.mutation({
+      query: ({ id, endpoint }) => ({
+        url: `devices/${id}/${endpoint}`,
+        method: 'POST',
+      }),
     }),
   }),
 });
 
-export const { useGetMyDevicesQuery, useGetDeviceHealthQuery, useGetDeviceLogsQuery } = devicesApi;
+export const { useGetMyDevicesQuery, useGetDeviceHealthQuery, useGetDeviceLogsQuery, useUpdateDeviceMutation } =
+  devicesApi;

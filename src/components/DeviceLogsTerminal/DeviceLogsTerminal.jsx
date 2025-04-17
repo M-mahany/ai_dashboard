@@ -1,12 +1,35 @@
 import { useGetDeviceLogsQuery } from '@/lib/services/devicesApi';
 import './DeviceLogsTerminal.scss';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import { CircularProgress } from '@mui/material';
 
 const DeviceLogsTerminal = ({ skipApi, deviceId }) => {
-  const { data, isLoading, error } = useGetDeviceLogsQuery(deviceId, { skip: skipApi });
+  const observerRef = useRef();
+  const [page, setPage] = useState(1);
 
-  const deviceLogs = data?.data;
+  const { data, isLoading, isFetching, error } = useGetDeviceLogsQuery(
+    { id: deviceId, query: { page, limit: 3000 } },
+    { skip: skipApi }
+  );
+
+  const deviceLogs = data?.data?.logs;
+  const hasNextPage = data?.data?.total > data?.data?.logs?.length;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isFetching && !isLoading && hasNextPage) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (observerRef.current) observer.observe(observerRef.current);
+
+    return () => observer.disconnect();
+  }, [isFetching, hasNextPage]);
 
   useEffect(() => {
     if (error) {
@@ -20,7 +43,7 @@ const DeviceLogsTerminal = ({ skipApi, deviceId }) => {
         {isLoading ? (
           <p>Loading...</p>
         ) : deviceLogs ? (
-          deviceLogs?.slice(0, 1000).map((log, index) => (
+          deviceLogs?.map((log, index) => (
             <div className="logLine" key={index}>
               {log?.raw ? (
                 <p>{log?.raw}</p>
@@ -35,6 +58,19 @@ const DeviceLogsTerminal = ({ skipApi, deviceId }) => {
           ))
         ) : (
           <p>No Logs Found</p>
+        )}
+        {deviceLogs?.length && hasNextPage ? (
+          <span className="observer" ref={observerRef}>
+            {isFetching ? (
+              <>
+                <CircularProgress style={{ width: '20px', height: '20px', color: 'white' }} /> Loading more...
+              </>
+            ) : (
+              <></>
+            )}
+          </span>
+        ) : (
+          <></>
         )}
       </div>
     </div>
