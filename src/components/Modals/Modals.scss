@@ -1,0 +1,39 @@
+.modalHeader{
+    padding: 12px;
+    border-bottom: 1px solid rgb(214, 214, 214);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p{
+        color: var(--main);
+        font-weight: 700;
+    }
+    .closeBttn{
+        color: var(--main);
+    }
+}
+.modalFooter{
+    padding: 18px 12px;
+    background-color: rgb(244, 244, 244);
+    border-top: 1px solid rgb(214, 214, 214);
+    display: flex;
+    gap: 16px;
+    button{
+        flex: 1;
+        border-radius: 20px;
+        text-transform: capitalize;
+        height: 42px;
+        &:disabled{
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        &:first-child{
+            background-color: #4666a71a;
+            color: #4667a7;
+        }
+        &:nth-child(2){
+            background-color: var(--main);
+            color: white;
+        }
+    }
+}

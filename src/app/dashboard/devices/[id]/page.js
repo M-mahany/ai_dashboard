@@ -66,7 +66,7 @@ const SingleDevice = () => {
       {
         headerName: 'Memory Free',
         field: null,
-        customFiled: `${(parseFloat(props.totalMemory) - parseFloat(props.usedMemory)).toFixed(2)}GB`,
+        customFiled: `${(parseFloat(props?.totalMemory) - parseFloat(props?.usedMemory)).toFixed(2)}GB`,
         icon: <PiMemory className="icon" />,
       },
     ];
@@ -88,9 +88,9 @@ const SingleDevice = () => {
         headerName: 'Reserved Space',
         field: null,
         customFiled: `${(
-          parseFloat(props.totalSpace) -
-          parseFloat(props.avaiableSpace) -
-          parseFloat(props.usedSpace)
+          parseFloat(props?.totalSpace) -
+          parseFloat(props?.avaiableSpace) -
+          parseFloat(props?.usedSpace)
         ).toFixed(2)} GB`,
         icon: <BsDeviceSsd className="icon" />,
       },
@@ -138,15 +138,15 @@ const SingleDevice = () => {
                   <Doughnut value={parseFloat(systemHealth?.cpuUsage ?? 0)} thickness={2.5} />
                   <p className="info smll">CPU Utilization</p>
                 </div>
-                {systemHealth &&
-                  sectionOne?.map((sec, index) => (
-                    <DeviceHealthBox
-                      title={sec?.headerName}
-                      value={systemHealth[sec?.field]}
-                      icon={sec?.icon || <TiFlowParallel className="icon" />}
-                      key={index}
-                    />
-                  ))}
+                {sectionOne?.map((sec, index) => (
+                  <DeviceHealthBox
+                    title={sec?.headerName}
+                    value={systemHealth?.[sec?.field] ?? ''}
+                    icon={sec?.icon || <TiFlowParallel className="icon" />}
+                    key={index}
+                    isLoading={isLoading}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -159,15 +159,15 @@ const SingleDevice = () => {
                   <Doughnut value={parseFloat(systemHealth?.memoryUsage ?? 0)} thickness={2.5} />
                   <p className="info smll">Memory Usage</p>
                 </div>
-                {systemHealth &&
-                  sectionTwo(systemHealth)?.map((sec, index) => (
-                    <DeviceHealthBox
-                      title={sec?.headerName}
-                      value={sec?.field === null ? sec.customFiled : systemHealth[sec?.field]}
-                      icon={sec?.icon || <TiFlowParallel className="icon" />}
-                      key={index}
-                    />
-                  ))}
+                {sectionTwo(systemHealth)?.map((sec, index) => (
+                  <DeviceHealthBox
+                    title={sec?.headerName}
+                    value={sec?.field === null ? sec?.customFiled : systemHealth?.[sec?.field]}
+                    icon={sec?.icon || <TiFlowParallel className="icon" />}
+                    key={index}
+                    isLoading={isLoading}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -180,15 +180,15 @@ const SingleDevice = () => {
                   <Doughnut value={parseFloat(systemHealth?.diskUsage ?? 0)} thickness={2.5} />
                   <p className="info smll">Disk Utilization</p>
                 </div>
-                {systemHealth &&
-                  sectionThree(systemHealth)?.map((sec, index) => (
-                    <DeviceHealthBox
-                      title={sec?.headerName}
-                      value={sec?.field === null ? sec.customFiled : systemHealth[sec?.field]}
-                      icon={sec?.icon || <TiFlowParallel className="icon" />}
-                      key={index}
-                    />
-                  ))}
+                {sectionThree(systemHealth)?.map((sec, index) => (
+                  <DeviceHealthBox
+                    title={sec?.headerName}
+                    value={sec?.field === null ? sec?.customFiled : systemHealth?.[sec?.field]}
+                    icon={sec?.icon || <TiFlowParallel className="icon" />}
+                    key={index}
+                    isLoading={isLoading}
+                  />
+                ))}
               </div>
             </div>
           </div>

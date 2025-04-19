@@ -27,7 +27,7 @@
     flex-direction: column;
     button{
         gap: 4px;
-        justify-content: center;
+        justify-content: flex-start;
         text-transform: capitalize;
         color: #4c4c4c;
         &.active{

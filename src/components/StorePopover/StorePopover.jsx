@@ -10,8 +10,10 @@ import { LuStore } from 'react-icons/lu';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setStore } from '@/lib/features/storeSlice';
+import Modals from '../Modals/Modals';
 
 const StorePopover = () => {
+  const [modal, setModal] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedStore, setSelectedStore] = useState(null);
   const dispatch = useDispatch();
@@ -47,8 +49,14 @@ const StorePopover = () => {
     }
   }, [selectedStore]);
 
+  const handleStoreClick = (store) => {
+    setSelectedStore(store);
+    handleClose();
+  };
+
   return (
     <>
+      <Modals setModal={setModal} modal={modal} />
       {isLoading ? (
         <Skeleton variant="text" sx={{ fontSize: '2.5rem', width: '100%' }} />
       ) : (
@@ -77,14 +85,14 @@ const StorePopover = () => {
               {stores?.map((store, i) => (
                 <Button
                   key={i}
-                  onClick={() => setSelectedStore(store)}
+                  onClick={() => handleStoreClick(store)}
                   className={selectedStore?.name === store?.name ? 'active' : ''}
                 >
                   <LuStore />
                   {store?.name}
                 </Button>
               ))}
-              <Button>
+              <Button onClick={() => setModal({ name: 'addNewStore' })}>
                 <FiPlus />
                 Add New Store
               </Button>

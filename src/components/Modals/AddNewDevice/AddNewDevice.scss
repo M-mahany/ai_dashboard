@@ -1,0 +1,47 @@
+.addNewDeviceModal{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    width: 90%;
+    max-width: 580px;
+    border-radius: 12px 18px;
+    overflow: hidden;
+    .modalBody{
+        padding:24px 18px;
+        gap: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 18px;
+        p{
+            text-align: center;
+            color: gray;
+            font-size: 15px;
+            font-weight: 600;
+            &.blue{
+                color: var(--main);
+            }
+        }
+        .storeSelected{
+            width: 100%;
+            font-weight: 700;
+            color: var(--main);
+        }
+        .scriptLoader{
+            background-color: #edf1fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            height: 69px;
+            border-radius: 4px;
+        }
+        .infotxt{
+            color:#d97e16;
+            font-size: 13px;
+            margin-top: -10px;
+        }
+    }
+}

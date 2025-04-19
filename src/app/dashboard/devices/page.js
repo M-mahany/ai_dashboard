@@ -10,8 +10,12 @@ import { toast } from 'react-toastify';
 import { HiOutlineServer } from 'react-icons/hi2';
 import DeviceActionButton from '@/components/DeviceActionButton/DeviceActionButton';
 import { useGetMyDevicesQuery } from '@/lib/services/devicesApi';
+import { useSelector } from 'react-redux';
+import Modals from '@/components/Modals/Modals';
 
 const Devices = () => {
+  const [modal, setModal] = useState({});
+  const store = useSelector((state) => state.store);
   const columns = [
     {
       field: 'name',
@@ -34,7 +38,7 @@ const Devices = () => {
       flex: 1,
       valueGetter: (value, row) => {
         if (!value) {
-          return dayjs(row?.lastSeen).format('dddd, MMMM D, YYYY h:mm A');
+          return row?.lastSeen ? dayjs(row?.lastSeen).format('dddd, MMMM D, YYYY h:mm A') : 'N/A';
         }
         return value;
       },
@@ -46,6 +50,11 @@ const Devices = () => {
         ) : (
           <span className="status">{params.value}</span>
         ),
+    },
+    {
+      field: 'isRegistered',
+      headerName: 'REGISTERED',
+      flex: 1,
     },
     {
       field: null,
@@ -64,7 +73,10 @@ const Devices = () => {
     pageSize: 10,
   });
 
-  const { data, isLoading, error, isFetching } = useGetMyDevicesQuery({ page: paginationModel?.page + 1 });
+  const { data, isLoading, error, isFetching } = useGetMyDevicesQuery(
+    { page: paginationModel?.page + 1, storeId: store?._id },
+    { skip: !store?._id }
+  );
   const devices = data?.data?.devices ?? [];
 
   const hasNextPage = data?.data?.total > devices?.length;
@@ -101,12 +113,16 @@ const Devices = () => {
 
   return (
     <div className="devicePage">
+      <Modals modal={modal} setModal={setModal} />
       <span className="top">
         <span>
           <h1>Devices</h1>
           <p>Manage Devices connected to your network</p>
         </span>
-        <Button>
+        <Button
+          onClick={() => setModal({ name: 'addNewDevice' })}
+          // disabled={(devices && devices?.length > 0) || isLoading}
+        >
           <FaPlus /> Add Device
         </Button>
       </span>
