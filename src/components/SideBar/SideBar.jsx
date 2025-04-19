@@ -1,4 +1,5 @@
 'use client';
+
 import StorePopover from '../StorePopover/StorePopover';
 import './SideBar.scss';
 import { LuAudioLines } from 'react-icons/lu';
@@ -10,6 +11,9 @@ import { mainLinks } from '@/utils/mainLinks';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import { IconButton } from '@mui/material';
+import { HiOutlineMenuAlt2 } from 'react-icons/hi';
+import { useState } from 'react';
 
 const linkIcon = (linkName) => {
   switch (linkName) {
@@ -25,6 +29,8 @@ const linkIcon = (linkName) => {
 };
 
 const SideBar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const pathName = usePathname();
 
   const handleLogout = () => {
@@ -33,7 +39,10 @@ const SideBar = () => {
   };
 
   return (
-    <div className="sideBar">
+    <div className={`sideBar ${isOpen ? 'open' : ''}`}>
+      <IconButton className="mobileToggle" onClick={() => setIsOpen(!isOpen)}>
+        <HiOutlineMenuAlt2 />
+      </IconButton>
       <div className="top">
         <StorePopover />
         {mainLinks.map((link, index) => (

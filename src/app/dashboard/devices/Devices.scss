@@ -11,10 +11,13 @@
         border-bottom: 1px solid #4666a73b;
         padding-bottom: 32px;
         margin-bottom: 32px;
+        flex-wrap:wrap ;
+        gap: 12px;
         h1{
             color: var(--main);
             font-family: "Roboto", sans-serif;
             font-weight: 600;
+            font-size: clamp(28px,4.2vw,32px);
         }
         p{
             font-weight: 500;
@@ -64,4 +67,7 @@
             font-size: 18px;
         }
     }
+    // .MuiDataGrid-columnHeader{
+    //     min-width: 140px;
+    // }
 }

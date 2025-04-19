@@ -21,21 +21,28 @@ const Devices = () => {
       field: 'name',
       headerName: 'DEVICE',
       flex: 1,
+      sortable: false,
+      minWidth: 120,
     },
     {
       field: 'ipAddress',
       headerName: 'ADDRESSES',
       flex: 1,
+      sortable: false,
+      minWidth: 120,
     },
     {
       field: 'timeZone',
       headerName: 'TIMEZONE',
       flex: 1,
+      sortable: false,
+      minWidth: 120,
     },
     {
       field: 'isOnline',
       headerName: 'LAST SEEN',
       flex: 1,
+      minWidth: 120,
       valueGetter: (value, row) => {
         if (!value) {
           return row?.lastSeen ? dayjs(row?.lastSeen).format('dddd, MMMM D, YYYY h:mm A') : 'N/A';
@@ -50,11 +57,14 @@ const Devices = () => {
         ) : (
           <span className="status">{params.value}</span>
         ),
+      sortable: false,
     },
     {
       field: 'isRegistered',
       headerName: 'REGISTERED',
       flex: 1,
+      sortable: false,
+      minWidth: 120,
     },
     {
       field: null,
@@ -65,6 +75,7 @@ const Devices = () => {
           <DeviceActionButton device={params} />
         </span>
       ),
+      sortable: false,
     },
   ];
 

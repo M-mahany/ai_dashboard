@@ -23,6 +23,9 @@
             color: gray;
             font-size: 12px;
             font-weight: 500;
+            @media (max-width:780px) {
+                display: none;
+            }
             p{
                 flex:1;
                 &:first-child{

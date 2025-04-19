@@ -11,6 +11,9 @@ export default function RootLayout({ children }) {
     <div className="dashboardBody">
       <div className="dashboardWrapper">
         <SideBar />
+        <div className="topMobile">
+          <p className="brandName">PythiaStore</p>
+        </div>
         <div className="dashboardContent">{children}</div>
       </div>
     </div>

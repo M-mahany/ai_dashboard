@@ -1,7 +1,7 @@
 import { userRequestAPI } from './mainApi';
 
 const enhancedApi = userRequestAPI.enhanceEndpoints({
-  addTagTypes: ['devices', 'deviceKey'],
+  addTagTypes: ['devices', 'deviceKey', 'deviceLogs'],
 });
 
 export const devicesApi = enhancedApi.injectEndpoints({
@@ -49,12 +49,14 @@ export const devicesApi = enhancedApi.injectEndpoints({
       forceRefetch({ currentArg, previousArg }) {
         return currentArg !== previousArg;
       },
+      providesTags: ['deviceLogs'],
     }),
     updateDevice: build.mutation({
       query: ({ id, endpoint }) => ({
         url: `devices/${id}/${endpoint}`,
         method: 'POST',
       }),
+      invalidatesTags: ['deviceLogs'],
     }),
     registerDeviceToStore: build.mutation({
       query: (storeId) => ({
