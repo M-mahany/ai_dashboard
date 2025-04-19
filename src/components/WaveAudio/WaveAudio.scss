@@ -77,23 +77,36 @@
       }
     }
   }
+  .tabContent{
+    @media (max-width:991px) {
+      height: 160px;
+    }
+  }
   .mediaControl{
     display: flex;
+    flex-wrap: wrap-reverse;
     padding: 12px 24px;
     border-radius: 12px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    @media (max-width:620px) {
+      padding: 12px;
+    }
     .medialBox{
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 14px;
       flex: 1;
+      @media (max-width:620) {
+        gap: 4px;
+      }
       .iconBttn{
         border: 1px solid #ededed;
         color: var(--main);
       }
       .customAudioProgress{
         color: var(--main);
+        min-width: 100px;
       }
       .timestamp{
         font-size: 14px;

@@ -26,8 +26,12 @@ const RecordingBox = ({ recording, setModal }) => {
         <MdOutlinePlayCircleFilled className="icon filled" />
       </span>
       <p className="recordingName">{dayjs(recording?.date).format('MMMM D')} - In-store recording</p>
-      <p>{formatTime(recording?.duration)}</p>
-      <p>{recording?.date}</p>
+      <p>
+        <strong>Duration:</strong> {formatTime(recording?.duration)}
+      </p>
+      <p>
+        <strong>Date:</strong> {recording?.date}
+      </p>
       <span className={`status ${recording?.status}`}>{recording?.status}</span>
       <div className="actions">
         <RecordingDownloadButton

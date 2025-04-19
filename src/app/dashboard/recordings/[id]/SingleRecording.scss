@@ -4,17 +4,26 @@
     gap: 18px;
     flex-grow: 1;
     max-width: calc(100% - 48px);
+    overflow: auto;
+    @media (max-width:991px) {
+        flex-wrap: wrap;
+        padding: 12px 12px 24px;
+        max-width: calc(100% - 24px);
+    }
     .left{
         flex: 2;
         display: flex;
         flex-direction: column;
         gap: 18px;
         max-width: calc(66.6666% - 9px);
+        @media (max-width:991px) {
+            max-width: 100%;
+        }
         .top{
             gap: 20px;
             display: flex;
-            flex: 1;
-            max-height: 185px;
+            flex-wrap: wrap;
+            min-height: 185px;
             .box{
                 padding: 12px;
                 border-radius: 16px;
@@ -29,6 +38,7 @@
                     width: 38%;
                     display: flex;
                     justify-content: center;
+                    min-width: 60px;
                     img{
                         width: 50%;
                         object-fit: contain;
@@ -41,7 +51,7 @@
                     align-items: center;
                         .bg{
                             color: var(--main);
-                            font-size: 40px;
+                            font-size: clamp(28px,3.8vw,40px);
                             font-weight: 600;
                         }
                         .smll{
@@ -97,6 +107,10 @@
         flex-direction: column;
         gap: 20px;
         max-width: calc(33.33333% - 53px);
+        min-width: 280px;
+        @media (max-width:991px) {
+            max-width: calc(100% - 44px);
+        }
         .searchInputBox{
             display: flex;
             align-items: center;
@@ -184,6 +198,9 @@
         flex-grow: 1;
         overflow: auto;
         display: none;
+        @media (max-width:991px) {
+            height: 500px;
+        }
         &.active{
             display: block;
         }
