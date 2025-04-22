@@ -2,6 +2,7 @@
 
 import { useAuthRegisterMutation } from '@/lib/services/authApi';
 import { Button } from '@mui/material';
+import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
