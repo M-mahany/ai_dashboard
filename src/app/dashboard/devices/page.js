@@ -132,7 +132,7 @@ const Devices = () => {
         </span>
         <Button
           onClick={() => setModal({ name: 'addNewDevice' })}
-          disabled={(devices && devices?.length > 0) || isLoading}
+          disabled={(devices && devices?.length > 0) || isLoading || !store?._id}
         >
           <FaPlus /> Add Device
         </Button>
