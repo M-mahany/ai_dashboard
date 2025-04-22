@@ -11,7 +11,10 @@ export const recordingsApi = enhancedApi.injectEndpoints({
         const searchQuery = new URLSearchParams(query);
         return { url: `recordings?${searchQuery.toString()}` };
       },
-      serializeQueryArgs: ({ endpointName }) => endpointName,
+      serializeQueryArgs: ({ queryArgs, endpointName }) => {
+        const { storeId } = queryArgs;
+        return `${endpointName}-${storeId}`;
+      },
       merge: (currentCache, newItems, { arg }) => {
         if (arg.page > 1) {
           const cacheArray = currentCache?.data?.recordings || [];

@@ -15,15 +15,17 @@ const Recordings = () => {
   const header = ['', 'Name', 'Duration', 'Date', 'Status', 'Actions'];
   const mainRecordingStatus = ['pending', 'processed'];
   const store = useSelector((state) => state.store);
-
   //API state
   const observerRef = useRef();
-  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState({ page: 1, storeId: store?._id });
 
-  const { data, isLoading, isFetching, error } = useGetAllRecordingsQuery(
-    { page, storeId: store?._id },
-    { skip: !store?._id }
-  );
+  useEffect(() => {
+    if (store) {
+      setQuery({ page: 1, storeId: store?._id });
+    }
+  }, [store]);
+
+  const { data, isLoading, isFetching, error } = useGetAllRecordingsQuery(query, { skip: !query?.storeId });
   const recordings = data ? data?.data?.recordings : [];
   const hasMore = data?.data?.total > recordings?.length;
 
@@ -31,7 +33,7 @@ const Recordings = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !isFetching && !isLoading && hasMore) {
-          setPage((prev) => prev + 1);
+          setQuery((prev) => ({ ...prev, page: prev.page + 1 }));
         }
       },
       { threshold: 1 }
