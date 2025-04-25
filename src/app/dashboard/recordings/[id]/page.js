@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import './SingleRecording.scss';
 import { IoIosSearch } from 'react-icons/io';
 import Image from 'next/image';
-import { Skeleton } from '@mui/material';
+import { IconButton, Skeleton, Tooltip } from '@mui/material';
 import { FaCircle } from 'react-icons/fa';
 import WaveAudio from '@/components/WaveAudio/WaveAudio';
 import { useGetRecordingByIdQuery } from '@/lib/services/recordingsApi';
@@ -14,6 +14,8 @@ import { MdHourglassEmpty } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import RecordingTranscript from '@/components/RecordingTranscript';
 import Doughnut from '@/components/Doughnut/Doughnut';
+import { MdDownloading } from 'react-icons/md';
+import { exportToTxt } from '@/utils/helpers/exportToText';
 
 const defaultStatus = ['pending', 'merged', 'transcriped', 'analyzed'];
 const tabLabels = ['Transcript', 'Insights', 'Feedback'];
@@ -50,6 +52,13 @@ const SingleRecording = () => {
       setSelectedTab('Transcript');
     }
     setTranscriptQuery(value.trim().split(' '));
+  };
+
+  const handleTranscriptExport = () => {
+    const recordingTxtTranscript = recording.transcript?.segments
+      .map((seg) => `Start:${formatTime(seg?.start)}  End:${formatTime(seg?.end)}\n${seg?.text}`)
+      .join('\n \n');
+    exportToTxt(`${recording?._id}_transcript.txt`, recordingTxtTranscript);
   };
 
   useEffect(() => {
@@ -140,10 +149,18 @@ const SingleRecording = () => {
         </div>
       </div>
       <div className="right">
-        <div className={`searchInputBox ${!hasTranscript || isLoading ? 'disabled' : ''}`}>
-          <IoIosSearch className="icon" />
-          <input placeholder="Search Transcript" onChange={handleSearchChange} />
+        <div className="top">
+          <div className={`searchInputBox ${!hasTranscript || isLoading ? 'disabled' : ''}`}>
+            <IoIosSearch className="icon" />
+            <input placeholder="Search Transcript" onChange={handleSearchChange} />
+          </div>
+          <Tooltip title="Export Transcript">
+            <IconButton className="exportTranscriptBttn" onClick={handleTranscriptExport}>
+              <MdDownloading className="icon" />
+            </IconButton>
+          </Tooltip>
         </div>
+
         <div className="Tab">
           <div className={`tabsWrapper ${isLoading ? 'disabled' : ''}`}>
             <div className="tabsLabels">

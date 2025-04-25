@@ -111,6 +111,15 @@
         @media (max-width:991px) {
             max-width: calc(100% - 44px);
         }
+        .top{
+            display: flex;
+            width: 100%;
+            gap: 12px;
+            .exportTranscriptBttn{
+                color: var(--main);
+                border:1px solid #c5c5c5;
+            }
+        }
         .searchInputBox{
             display: flex;
             align-items: center;
@@ -118,6 +127,7 @@
             border: 1.5px solid #ededed;
             border-radius: 10px;
             padding: 4px 8px;
+            flex-grow: 1;
             &.disabled{
                 opacity: 0.6;
                 pointer-events: none;
