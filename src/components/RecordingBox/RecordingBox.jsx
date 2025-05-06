@@ -1,12 +1,14 @@
 'use client';
 
-import { formatTime } from '@/utils/helpers/time';
+import { formatTime, getTimeAgo } from '@/utils/helpers/time';
 import './RecordingBox.scss';
 import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { MdDelete, MdOutlinePlayCircleFilled, MdOutlinePlayCircle } from 'react-icons/md';
 import dayjs from 'dayjs';
 import RecordingDownloadButton from '../RecordingDownloadButton';
+import { isRecordingExpired } from '@/utils/helpers/isRecordingExpired';
+import { PiClockCountdownFill } from 'react-icons/pi';
 
 const RecordingBox = ({ recording, setModal }) => {
   const router = useRouter();
@@ -19,13 +21,15 @@ const RecordingBox = ({ recording, setModal }) => {
     });
   };
 
+  const isExpired = isRecordingExpired(recording);
+
   return (
     <div className="recordingBox" onClick={() => router.push(`recordings/${recording?._id}`)}>
       <span className="boxIcon">
         <MdOutlinePlayCircle className="icon" />
         <MdOutlinePlayCircleFilled className="icon filled" />
       </span>
-      <p className="recordingName">{dayjs(recording?.date).format('MMMM D')} - In-store recording</p>
+      <p className="recordingName">{dayjs(recording?.date).format('MMMM D, YYYY')}</p>
       <p>
         <strong>Duration:</strong> {formatTime(recording?.duration)}
       </p>
@@ -34,17 +38,26 @@ const RecordingBox = ({ recording, setModal }) => {
       </p>
       <span className={`status ${recording?.status}`}>{recording?.status}</span>
       <div className="actions">
-        <RecordingDownloadButton
-          props={{ className: 'iconBttn', disabled: recording?.status === 'pending' ? true : false }}
-          recordingId={recording?._id}
-        />
-        <IconButton
-          className="iconBttn delete"
-          onClick={handleDelete}
-          disabled={recording?.status === 'pending' ? true : false}
-        >
-          <MdDelete className="icon" />
-        </IconButton>
+        {isExpired ? (
+          <span className="expiryWrapper">
+            <PiClockCountdownFill />
+            <p className="expiredTxt">Expired {getTimeAgo(recording?.createdAt)}</p>
+          </span>
+        ) : (
+          <>
+            <RecordingDownloadButton
+              props={{ className: 'iconBttn', disabled: recording?.status === 'pending' ? true : false }}
+              recordingId={recording?._id}
+            />
+            <IconButton
+              className="iconBttn delete"
+              onClick={handleDelete}
+              disabled={recording?.status === 'pending' ? true : false}
+            >
+              <MdDelete className="icon" />
+            </IconButton>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
+import { clearUser } from '../features/authSlice';
 
 const baseQueryWithToken = fetchBaseQuery({
   baseUrl: '/api/v1/',
@@ -21,6 +22,7 @@ const baseQueryWithAuth = async (args, api, extraOptions) => {
     // Handle 401,403 Unauthorized error
     Cookies.remove('authToken');
     window.location.href = '/auth/login';
+    api.dispatch(clearUser());
   }
 
   return result; // Return the result, including any errors

@@ -1,7 +1,7 @@
 import { userRequestAPI } from './mainApi';
 
 const enhancedApi = userRequestAPI.enhanceEndpoints({
-  addTagTypes: ['recordings'],
+  addTagTypes: ['recordings', 'recording'],
 });
 
 export const recordingsApi = enhancedApi.injectEndpoints({
@@ -40,6 +40,7 @@ export const recordingsApi = enhancedApi.injectEndpoints({
       query: (id) => ({
         url: `recordings/${id}`,
       }),
+      providesTags: ['recording'],
       transformResponse: (response) => {
         if (response?.data?.peaks) {
           const peaks = response?.data?.peaks ?? [];
@@ -96,6 +97,19 @@ export const recordingsApi = enhancedApi.injectEndpoints({
         }
       },
     }),
+    analyzeRecording: build.mutation({
+      query: (id) => ({
+        url: `recordings/${id}/analyze`,
+        method: 'PUT',
+      }),
+    }),
+    approveRecording: build.mutation({
+      query: (id) => ({
+        url: `recordings/${id}/approve`,
+        method: 'PUT',
+      }),
+      invalidatesTags: ['recording'],
+    }),
   }),
 });
 
@@ -104,4 +118,6 @@ export const {
   useGetRecordingByIdQuery,
   useLazyGetRecordingDownloadableUrlQuery,
   useDeleteRecordingByIdMutation,
+  useAnalyzeRecordingMutation,
+  useApproveRecordingMutation,
 } = recordingsApi;

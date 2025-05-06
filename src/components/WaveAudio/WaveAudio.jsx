@@ -10,11 +10,15 @@ import { RiResetLeftFill } from 'react-icons/ri';
 import { formatTime } from '@/utils/helpers/time';
 import { MdOutlinePendingActions } from 'react-icons/md';
 import RecordingDownloadButton from '../RecordingDownloadButton';
+import { PiClockCountdownFill } from 'react-icons/pi';
+import { isRecordingExpired } from '@/utils/helpers/isRecordingExpired';
 
 const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence }) => {
   const streamUrl = recording?.streamUrl;
   const duration = recording?.duration ?? 0;
   const hasPeaks = !!recording?.peaks?.length;
+
+  const isExpired = isRecordingExpired(recording);
 
   const containerRef = useRef(null);
   const waveHoverRef = useRef(null);
@@ -103,7 +107,22 @@ const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence 
   }
 
   return (
-    <div className={`audioWithTranscript ${!streamUrl ? 'disabled' : ''}`}>
+    <div className={`audioWithTranscript ${!streamUrl || isExpired ? 'disabled' : ''}`}>
+      {(!streamUrl || isExpired) && (
+        <span className="layer">
+          {isExpired && (
+            <span className="absoluteTxt">
+              <span>
+                <PiClockCountdownFill style={{ marginRight: '4px' }} />
+                <span>
+                  Expired Recording <br />
+                </span>
+              </span>
+              <p>This content has passed the 90-day expiration period</p>
+            </span>
+          )}
+        </span>
+      )}
       <div className={`waveAudioWrapper ${!hasPeaks ? 'disabled' : ''}`}>
         {!hasPeaks && <span className="noPeaksTxt">Audio peaks not available</span>}
         <div ref={containerRef} id="waveAudio">

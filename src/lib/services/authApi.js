@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import { publicRequestAPI } from './mainApi';
+import { setUser } from '../features/authSlice';
 
 const enhancedApi = publicRequestAPI.enhanceEndpoints({
   addTagTypes: ['auth'],
@@ -17,7 +18,12 @@ export const authApi = enhancedApi.injectEndpoints({
         if (response?.data?.token) {
           Cookies.set('authToken', response.data.token, { expires: 7 });
         }
-        return response;
+        return response.data;
+      },
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+        const user = data?.user;
+        dispatch(setUser(user));
       },
     }),
     authRegister: build.mutation({

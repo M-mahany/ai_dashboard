@@ -14,6 +14,8 @@ import Cookies from 'js-cookie';
 import { IconButton } from '@mui/material';
 import { HiOutlineMenuAlt2 } from 'react-icons/hi';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { clearUser } from '@/lib/features/authSlice';
 
 const linkIcon = (linkName) => {
   switch (linkName) {
@@ -30,12 +32,13 @@ const linkIcon = (linkName) => {
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const dispatch = useDispatch();
   const pathName = usePathname();
 
   const handleLogout = () => {
     Cookies.remove('authToken');
     location.reload();
+    dispatch(clearUser());
   };
 
   return (

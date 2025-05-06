@@ -1,3 +1,10 @@
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
+
 export function formatTime(seconds) {
   const hours = Math.floor(seconds / 3600);
   const remainingSecondsAfterHours = seconds % 3600;
@@ -9,3 +16,19 @@ export function formatTime(seconds) {
     .toString()
     .padStart(2, '0')}`;
 }
+
+export const getTimeAgo = (dateString) => {
+  const now = dayjs();
+  const past = dayjs(dateString);
+  const diffDays = now.diff(past, 'day');
+
+  if (diffDays < 7) {
+    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+  } else if (diffDays < 365) {
+    const diffWeeks = now.diff(past, 'week');
+    return `${diffWeeks} week${diffWeeks !== 1 ? 's' : ''} ago`;
+  } else {
+    const diffYears = now.diff(past, 'year');
+    return `${diffYears} year${diffYears !== 1 ? 's' : ''} ago`;
+  }
+};

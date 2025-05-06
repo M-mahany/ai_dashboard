@@ -16,6 +16,9 @@ import RecordingTranscript from '@/components/RecordingTranscript';
 import Doughnut from '@/components/Doughnut/Doughnut';
 import { MdDownloading } from 'react-icons/md';
 import { exportToTxt } from '@/utils/helpers/exportToText';
+import RecordingInsights from '@/components/RecordingInsights';
+import { PiClockCountdownFill } from 'react-icons/pi';
+import { isRecordingExpired } from '@/utils/helpers/isRecordingExpired';
 
 const defaultStatus = ['pending', 'merged', 'transcriped', 'analyzed'];
 const tabLabels = ['Transcript', 'Insights', 'Feedback'];
@@ -35,6 +38,9 @@ const SingleRecording = () => {
 
   const recording = data?.data;
   const hasTranscript = recording && recording?.transcript && recording?.transcript?.segments?.length;
+  const hasInsight = recording && recording?.insight;
+
+  const isExpired = isRecordingExpired(recording);
 
   const getStatusProgress = (status) => {
     return ((defaultStatus.indexOf(status) + 1) / defaultStatus.length) * 100;
@@ -190,7 +196,7 @@ const SingleRecording = () => {
           ) : (
             <>
               <div className={`tabContent ${selectedTab === 'Transcript' ? 'active' : ''}`}>
-                {hasTranscript ? (
+                {hasTranscript && !isExpired ? (
                   <RecordingTranscript
                     recording={recording}
                     query={transcriptQuery}
@@ -201,24 +207,28 @@ const SingleRecording = () => {
                   />
                 ) : (
                   <span className="emptyContent">
-                    <MdHourglassEmpty className="icon" />
-                    <p>Transcript still pending</p>
+                    {isExpired ? (
+                      <span className="expireTranscript">
+                        <span>
+                          <PiClockCountdownFill style={{ marginRight: '4px' }} />
+                          <span>
+                            Expired Recording <br />
+                          </span>
+                        </span>
+                        <p>This content has passed the 90-day expiration period</p>
+                      </span>
+                    ) : (
+                      <>
+                        <MdHourglassEmpty className="icon" />
+                        <p>Transcript still pending</p>
+                      </>
+                    )}
                   </span>
                 )}
               </div>
               <div className={`tabContent ${selectedTab === 'Insights' ? 'active' : ''}`}>
-                {recording?.insights ? (
-                  <>
-                    <span className="heading">
-                      <p>Summary</p>
-                    </span>
-                    <p>
-                      What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown
-                      printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-                      only five centuries, but also the
-                    </p>
-                  </>
+                {hasInsight ? (
+                  <RecordingInsights recording={recording} />
                 ) : (
                   <span className="emptyContent">
                     <MdHourglassEmpty className="icon" />
@@ -227,16 +237,8 @@ const SingleRecording = () => {
                 )}
               </div>
               <div className={`tabContent ${selectedTab === 'Feedback' ? 'active' : ''}`}>
-                {recording?.insights ? (
-                  <>
-                    <span className="heading">
-                      <p>Client Issue with the behaviour of sales man</p>
-                    </span>
-                    <p>
-                      What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem
-                    </p>
-                  </>
+                {hasInsight ? (
+                  <RecordingInsights recording={recording} type="feedback" />
                 ) : (
                   <span className="emptyContent">
                     <MdHourglassEmpty className="icon" />

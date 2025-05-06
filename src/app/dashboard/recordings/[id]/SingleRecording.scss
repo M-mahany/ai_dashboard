@@ -111,6 +111,11 @@
         @media (max-width:991px) {
             max-width: calc(100% - 44px);
         }
+        @media (max-width:640px) {
+            min-width: 200px;
+            max-width: calc(100% - 32px);
+            padding: 16px;
+        }
         .top{
             display: flex;
             width: 100%;
@@ -128,6 +133,7 @@
             border-radius: 10px;
             padding: 4px 8px;
             flex-grow: 1;
+            min-width: 20px;
             &.disabled{
                 opacity: 0.6;
                 pointer-events: none;
@@ -140,6 +146,7 @@
                 padding: 8px 4px;
                 flex-grow: 1;
                 border: none;
+                min-width: 20px;
                 &::placeholder{
                     color: gray;
                 }
@@ -160,6 +167,7 @@
             display: flex;
             position: relative;
             width: calc(100% - 4px);
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
             &.disabled{
                 opacity: 0.6;
                 pointer-events: none;
@@ -214,7 +222,7 @@
         &.active{
             display: block;
         }
-            .emptyContent{
+        .emptyContent{
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -229,6 +237,20 @@
                   color: #c5c5c5;
                   font-size: 14px;
                   font-weight: 500;
+                }
+                .expireTranscript{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    color: rgb(235, 97, 114);
+                    font-weight: 600;
+                    p{
+                        margin: 0px;
+                        color: rgb(235, 97, 114);
+                        font-size: 12px;
+                        line-height: 140%;
+                    }
                 }
         }
         .segmentWrapper{
@@ -259,6 +281,72 @@
                 color: var(--main);
             }
         }
+        .tabContentInnerTxt{
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            padding: 6px 0px;
+            .heading{
+                padding: 0px;
+            }
+            .infoTxt{
+                display: block;
+                margin-top: -7px;
+                color: #9c9c9c;
+                font-weight: 500;
+                font-size: 12px;
+            }
+
+        }
+        .bttnsWrapper{
+            display: flex;
+            gap:12px;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .reAnalyzeBttn{
+            border: 1px solid var(--secondary);
+            text-transform: capitalize;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 600;
+            background-color: var(--secondary);
+            color: white;
+            transition: .3s all ease-in-out;
+            border-radius: 22px;
+            &.light{
+                border: 1px solid var(--main);
+                background-color: transparent;
+                color: var(--main);
+                &:hover{
+                    background-color: var(--main);
+                    color: white
+                }
+            }
+            &:disabled{
+                opacity: 0.6;
+            }
+            .icon{
+                font-size: 28px;
+                margin-right: 6px;
+                transition: .3s all ease-in-out;
+                &.rotating {
+                    animation: spin 1s linear infinite;
+                  }
+            }
+            &:hover{
+                background-color: transparent;
+                color: var(--secondary);
+                transform: scale(0.95);
+                .icon{
+                    transform: rotate(180deg);
+                }
+            }
+        }
         .heading{
             display: block;
             padding: 6px 0px;
@@ -266,8 +354,18 @@
                 color: var(--main);
                 font-size: 16px;
                 font-weight: 500;
+                text-transform: capitalize;
             }
         }
+        .boldTxt{
+            font-weight: 600;
+            text-transform: capitalize;   
+        }
+        ol {
+            width: calc(100% - 18px);
+            list-style-type: decimal; /* default for <ol> */
+            padding-left: 18px;
+          }
         .segmentTxt{
             color: #303030;
             max-width: 100%;
@@ -275,3 +373,8 @@
         }
     }
 }
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
