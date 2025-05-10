@@ -8,22 +8,19 @@ import { toast } from 'react-toastify';
 
 const RecordingInsights = ({ recording, type = 'overall' }) => {
   const insightsKeywords = [
-    'sentimentDistribution',
-    'complaintRate',
-    'complaints',
-    'escalationSignalsRate',
-    'topIssues',
-    'escalationPhrases',
-    'nuggetRatio',
-    'overallSentiment',
-    'quantifiedIssues',
+    'customer_satisfaction',
+    'customer_complaints',
+    'employee_sentiment',
+    'maintenance_or_equipment_issues',
+    'product_feedback',
+    'operational_red_flags',
   ];
 
   const user = useSelector((state) => state.auth.user);
-  const feedbackKeywords = ['summary', 'recommendations'];
+  const feedbackKeywords = ['improvement_suggestions'];
 
   const splitCamelCase = (text) => {
-    return text.replace(/([a-z])([A-Z])/g, '$1 $2');
+    return text.split('_').join(' ');
   };
 
   const [analyzeRecording, { data: analyzeData, isLoading: isLoadingAnalyze, error: analyzeError }] =
@@ -103,11 +100,19 @@ const RecordingInsights = ({ recording, type = 'overall' }) => {
                 ))}
               </ol>
             ) : typeof value === 'object' ? (
-              Object.entries(value).map(([key, value]) => (
-                <p key={key} style={{ width: '100%' }}>
-                  <span className={`boldTxt ${key}`}>{key}</span>: {value}
-                </p>
-              ))
+              Object.entries(value).map(([key, value]) =>
+                typeof value === 'object' ? (
+                  Object.entries(value).map(([key, value]) => (
+                    <p key={key} style={{ width: '100%' }}>
+                      <span className={`boldTxt ${key}`}>{splitCamelCase(key)}</span>: {value}
+                    </p>
+                  ))
+                ) : (
+                  <p key={key} style={{ width: '100%' }}>
+                    <span className={`boldTxt ${key}`}>{splitCamelCase(key)}</span>: {value}
+                  </p>
+                )
+              )
             ) : (
               <p>
                 {value}

@@ -42,14 +42,12 @@ const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence 
   useEffect(() => {
     if (!wavesurfer) return;
 
-    const onInteraction = (time) => {
+    const onInteraction = () => {
       wavesurfer.play();
-      setProgress((time / duration) * 100);
     };
 
     const onTimeUpdate = (time) => {
       setCurrentTime(time);
-      setProgress((time / duration) * 100);
     };
 
     wavesurfer.on('interaction', onInteraction);
@@ -81,14 +79,14 @@ const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence 
 
   const resetAudio = () => {
     wavesurfer?.setTime(0);
-    setProgress(0);
+    // setProgress(0);
   };
 
   const handleSeek = (e) => {
     const value = e.target.value;
     const seekTime = (value / 100) * duration;
     wavesurfer?.seekTo(seekTime / duration);
-    setProgress(value);
+    // setProgress(value);
   };
 
   const onPlayPause = useCallback(() => {
@@ -157,7 +155,7 @@ const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence 
             defaultValue={0}
             min={0}
             max={100}
-            value={progress}
+            value={parseInt((currentTime / duration) * 100)}
             onChange={handleSeek}
             className="customAudioProgress"
           />

@@ -287,7 +287,8 @@
             align-items: flex-end;
             justify-content: flex-start;
             flex-wrap: wrap;
-            padding: 6px 0px;
+            border-bottom: 1px solid rgb(237, 237, 237);
+            padding: 14px 0px;
             .heading{
                 padding: 0px;
             }
@@ -352,14 +353,17 @@
             padding: 6px 0px;
             p{
                 color: var(--main);
-                font-size: 16px;
-                font-weight: 500;
+                font-size: 17px;
+                font-weight: 600;
                 text-transform: capitalize;
+                text-decoration: underline;
+                margin-bottom: 6px;
             }
         }
         .boldTxt{
             font-weight: 600;
-            text-transform: capitalize;   
+            color: var(--main);
+            text-transform: capitalize;
         }
         ol {
             width: calc(100% - 18px);
