@@ -5,8 +5,11 @@ import { useEffect } from 'react';
 import { TbAnalyze } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import React from 'react';
+import { MdOutlineInsights } from 'react-icons/md';
+import { formatTime } from '@/utils/helpers/time';
 
-const RecordingInsights = ({ recording, type = 'overall' }) => {
+const RecordingInsights = ({ recording, wavesurfer }) => {
   const insightsKeywords = [
     'customer_satisfaction',
     'customer_complaints',
@@ -14,10 +17,11 @@ const RecordingInsights = ({ recording, type = 'overall' }) => {
     'maintenance_or_equipment_issues',
     'product_feedback',
     'operational_red_flags',
+    'improvement_suggestions',
   ];
+  const renderOrder = ['evidence', 'recommendation'];
 
   const user = useSelector((state) => state.auth.user);
-  const feedbackKeywords = ['improvement_suggestions'];
 
   const splitCamelCase = (text) => {
     return text.split('_').join(' ');
@@ -56,6 +60,16 @@ const RecordingInsights = ({ recording, type = 'overall' }) => {
     }
   }, [error, data]);
 
+  const recordingValidInsights = Object.entries(recording?.insight).filter(
+    ([key, value]) => insightsKeywords.includes(key) && value['recommendation']?.['root_cause']
+  );
+
+  const handleSegementClick = (startTime) => {
+    if (wavesurfer) {
+      wavesurfer.seekTo(startTime / recording?.duration);
+    }
+  };
+
   return (
     <>
       {isPermitted(user, 'ANALYZE_RECORDING') && (
@@ -72,55 +86,70 @@ const RecordingInsights = ({ recording, type = 'overall' }) => {
         </div>
       )}
 
-      {Object.entries(recording?.insight)
-        .filter(
-          ([key, value]) =>
-            (type === 'overall' ? insightsKeywords : feedbackKeywords).includes(key) &&
-            (Array.isArray(value) ? value.length > 0 : value)
-        )
-        .map(([key, value]) => (
-          <span className="tabContentInnerTxt" key={key}>
+      {recordingValidInsights?.length > 0 ? (
+        recordingValidInsights.map(([mainKey, mainValue], mainIndex) => (
+          <span className="tabContentInnerTxt" key={mainIndex}>
             <span className="heading">
-              <p>{splitCamelCase(key)}:</p>
+              <p>{splitCamelCase(mainKey)}:</p>
             </span>
-            {Array.isArray(value) ? (
-              <ol>
-                {value.map((v, i) => (
-                  <li key={i}>
-                    <p>{v?.phrase || v || 'N/A'}</p>
-                    {v?.count && (
-                      <span className="infoTxt">
-                        Mentioned{' '}
-                        {v?.phrase
-                          ? '(' + (v?.count || 1) + ')' + ` ${Number(v?.count ?? 1) > 1 ? 'Times' : 'Time'}`
-                          : ''}
-                      </span>
+            {typeof mainValue === 'object' ? (
+              renderOrder.map((outerKey, outerIndex) => {
+                const outerValue = mainValue[outerKey];
+                if (!outerValue) {
+                  return null;
+                }
+
+                return (
+                  <span className={`innerContent ${outerIndex === 0 ? 'first' : ''}`} key={outerIndex}>
+                    <span className="contentTitle">{outerKey}</span>
+                    {outerKey === 'evidence' ? (
+                      <p className="clickable" onClick={() => handleSegementClick(outerValue?.start)}>
+                        {outerValue?.quote} - [{formatTime(outerValue?.start)} - {formatTime(outerValue?.end)}]
+                      </p>
+                    ) : typeof outerValue === 'object' ? (
+                      Object.entries(outerValue).map(([innerKey, innerValue], innerIndex) =>
+                        Array.isArray(innerValue) ? (
+                          <React.Fragment key={innerIndex}>
+                            <span className={`boldTxt ${innerKey}`}>{splitCamelCase(innerKey)}:</span>
+                            <ol>
+                              {innerValue.map((v, i) => (
+                                <li key={i}>
+                                  <p>{v || 'N/A'}</p>
+                                </li>
+                              ))}
+                            </ol>
+                          </React.Fragment>
+                        ) : (
+                          <p key={innerIndex} style={{ width: '100%' }}>
+                            <>
+                              <span className={`boldTxt ${innerKey}`}>{splitCamelCase(innerKey)}: </span>
+                              {innerValue}
+                            </>
+                          </p>
+                        )
+                      )
+                    ) : (
+                      <p key={outerIndex} style={{ width: '100%' }}>
+                        {outerValue}
+                      </p>
                     )}
-                  </li>
-                ))}
-              </ol>
-            ) : typeof value === 'object' ? (
-              Object.entries(value).map(([key, value]) =>
-                typeof value === 'object' ? (
-                  Object.entries(value).map(([key, value]) => (
-                    <p key={key} style={{ width: '100%' }}>
-                      <span className={`boldTxt ${key}`}>{splitCamelCase(key)}</span>: {value}
-                    </p>
-                  ))
-                ) : (
-                  <p key={key} style={{ width: '100%' }}>
-                    <span className={`boldTxt ${key}`}>{splitCamelCase(key)}</span>: {value}
-                  </p>
-                )
-              )
+                  </span>
+                );
+              })
             ) : (
               <p>
-                {value}
-                {key.includes('Rate') ? '%' : ''}
+                {mainValue}
+                {mainKey.includes('Rate') ? '%' : ''}
               </p>
             )}
           </span>
-        ))}
+        ))
+      ) : (
+        <span className="emptyContent grow">
+          <MdOutlineInsights className="icon" />
+          <p>No valid insights found!</p>
+        </span>
+      )}
     </>
   );
 };

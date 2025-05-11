@@ -21,10 +21,10 @@ import { PiClockCountdownFill } from 'react-icons/pi';
 import { isRecordingExpired } from '@/utils/helpers/isRecordingExpired';
 
 const defaultStatus = ['pending', 'merged', 'transcriped', 'analyzed'];
-const tabLabels = ['Transcript', 'Insights', 'Feedback'];
+const tabLabels = ['Insights', 'Transcript'];
 
 const SingleRecording = () => {
-  const [selectedTab, setSelectedTab] = useState('Transcript');
+  const [selectedTab, setSelectedTab] = useState('Insights');
   const [currentTime, setCurrentTime] = useState(0);
   const [wavesurfer, setWavesurfer] = useState(null);
 
@@ -228,17 +228,7 @@ const SingleRecording = () => {
               </div>
               <div className={`tabContent ${selectedTab === 'Insights' ? 'active' : ''}`}>
                 {hasInsight ? (
-                  <RecordingInsights recording={recording} />
-                ) : (
-                  <span className="emptyContent">
-                    <MdHourglassEmpty className="icon" />
-                    <p>Insights still pending</p>
-                  </span>
-                )}
-              </div>
-              <div className={`tabContent ${selectedTab === 'Feedback' ? 'active' : ''}`}>
-                {hasInsight ? (
-                  <RecordingInsights recording={recording} type="feedback" />
+                  <RecordingInsights recording={recording} wavesurfer={wavesurfer} />
                 ) : (
                   <span className="emptyContent">
                     <MdHourglassEmpty className="icon" />

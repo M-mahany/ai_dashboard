@@ -220,7 +220,8 @@
             height: 500px;
         }
         &.active{
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
         .emptyContent{
                 display: flex;
@@ -228,6 +229,11 @@
                 align-items: center;
                 flex-direction: column;
                 height: 100%;
+                &.grow{
+                    height: auto;
+                    flex-grow: 1;
+                    min-height: 200px;
+                }
                 .icon{
                   color: #c5c5c5;
                   font-size: 38px;
@@ -283,12 +289,9 @@
         }
         .tabContentInnerTxt{
             display: flex;
-            gap: 4px;
-            align-items: flex-end;
-            justify-content: flex-start;
-            flex-wrap: wrap;
-            border-bottom: 1px solid rgb(237, 237, 237);
-            padding: 14px 0px;
+            flex-direction: column;
+            border-bottom: 2px solid rgb(237, 237, 237);
+            padding: 14px 0px 20px 0px;
             .heading{
                 padding: 0px;
             }
@@ -299,7 +302,38 @@
                 font-weight: 500;
                 font-size: 12px;
             }
-
+            .innerContent{
+                border-radius: 12px;
+                padding: 12px;
+                border: 1px solid #4666a72c;
+                margin-top: 20px;
+                &.first{
+                    margin-top:12px;
+                }
+                .contentTitle{
+                    font-weight: 500;
+                    text-transform: capitalize;
+                    color: var(--main);
+                    background-color: white;
+                    padding: 3px 16px;
+                    line-height: 100%;
+                    display: block;
+                    margin-top: -22px;
+                    margin-bottom: 6px;
+                    width: fit-content;
+                    border: 1px solid #4666a72c;
+                    border-radius: 12px;
+                    line-height: 100%;
+                }
+                p{
+                    &.clickable{
+                        cursor: pointer;
+                        &:hover{
+                           font-weight: 500;
+                        }
+                    }
+                }
+            }
         }
         .bttnsWrapper{
             display: flex;
@@ -356,12 +390,11 @@
                 font-size: 17px;
                 font-weight: 600;
                 text-transform: capitalize;
-                text-decoration: underline;
                 margin-bottom: 6px;
             }
         }
         .boldTxt{
-            font-weight: 600;
+            font-weight: 500;
             color: var(--main);
             text-transform: capitalize;
         }
