@@ -41,7 +41,7 @@ const RecordingBox = ({ recording, setModal }) => {
         {isExpired ? (
           <span className="expiryWrapper">
             <PiClockCountdownFill />
-            <p className="expiredTxt">Expired {getTimeAgo(recording?.createdAt)}</p>
+            <p className="expiredTxt">Expired {getTimeAgo(recording?.date)}</p>
           </span>
         ) : (
           <>

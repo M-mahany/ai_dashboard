@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { recordingExpiresIn } from '../config/config';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
@@ -19,11 +20,11 @@ export function formatTime(seconds) {
 
 export const getTimeAgo = (dateString) => {
   const now = dayjs();
-  const past = dayjs(dateString);
+  const past = dayjs(dateString).add(recordingExpiresIn, 'day');
   const diffDays = now.diff(past, 'day');
 
   if (diffDays < 7) {
-    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+    return diffDays > 0 ? `${diffDays} day${diffDays !== 1 ? 's' : ''} ago` : 'Today';
   } else if (diffDays < 365) {
     const diffWeeks = now.diff(past, 'week');
     return `${diffWeeks} week${diffWeeks !== 1 ? 's' : ''} ago`;

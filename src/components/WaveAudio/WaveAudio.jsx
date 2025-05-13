@@ -12,6 +12,7 @@ import { MdOutlinePendingActions } from 'react-icons/md';
 import RecordingDownloadButton from '../RecordingDownloadButton';
 import { PiClockCountdownFill } from 'react-icons/pi';
 import { isRecordingExpired } from '@/utils/helpers/isRecordingExpired';
+import { recordingExpiresIn } from '@/utils/config/config';
 
 const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence }) => {
   const streamUrl = recording?.streamUrl;
@@ -116,7 +117,7 @@ const WaveAudio = ({ recording, children, setCurrentTime, setRefrence, refrence 
                   Expired Recording <br />
                 </span>
               </span>
-              <p>This content has passed the 90-day expiration period</p>
+              <p>This content has passed the {recordingExpiresIn}-day expiration period</p>
             </span>
           )}
         </span>

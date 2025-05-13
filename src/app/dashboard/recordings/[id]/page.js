@@ -19,6 +19,7 @@ import { exportToTxt } from '@/utils/helpers/exportToText';
 import RecordingInsights from '@/components/RecordingInsights';
 import { PiClockCountdownFill } from 'react-icons/pi';
 import { isRecordingExpired } from '@/utils/helpers/isRecordingExpired';
+import { recordingExpiresIn } from '@/utils/config/config';
 
 const defaultStatus = ['pending', 'merged', 'transcriped', 'analyzed'];
 const tabLabels = ['Insights', 'Transcript'];
@@ -215,7 +216,7 @@ const SingleRecording = () => {
                             Expired Recording <br />
                           </span>
                         </span>
-                        <p>This content has passed the 90-day expiration period</p>
+                        <p>This content has passed the {recordingExpiresIn}-day expiration period</p>
                       </span>
                     ) : (
                       <>
@@ -227,12 +228,26 @@ const SingleRecording = () => {
                 )}
               </div>
               <div className={`tabContent ${selectedTab === 'Insights' ? 'active' : ''}`}>
-                {hasInsight ? (
+                {hasInsight && !isExpired ? (
                   <RecordingInsights recording={recording} wavesurfer={wavesurfer} />
                 ) : (
                   <span className="emptyContent">
-                    <MdHourglassEmpty className="icon" />
-                    <p>Insights still pending</p>
+                    {isExpired ? (
+                      <span className="expireTranscript">
+                        <span>
+                          <PiClockCountdownFill style={{ marginRight: '4px' }} />
+                          <span>
+                            Expired Recording <br />
+                          </span>
+                        </span>
+                        <p>This content has passed the {recordingExpiresIn}-day expiration period</p>
+                      </span>
+                    ) : (
+                      <>
+                        <MdHourglassEmpty className="icon" />
+                        <p>Insight still pending</p>
+                      </>
+                    )}
                   </span>
                 )}
               </div>
