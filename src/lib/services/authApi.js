@@ -16,7 +16,12 @@ export const authApi = enhancedApi.injectEndpoints({
       }),
       transformResponse: (response) => {
         if (response?.data?.token) {
-          Cookies.set('authToken', response.data.token, { expires: 7 });
+          Cookies.set('authToken', response.data.token, {
+            expires: 7,
+            domain: '.pythiastore.ai',
+            secure: true,
+            sameSite: 'Lax',
+          });
         }
         return response.data;
       },
