@@ -16,11 +16,7 @@ export const authApi = enhancedApi.injectEndpoints({
       }),
       transformResponse: (response) => {
         if (response?.data?.token) {
-          Cookies.set('authToken', response.data.token, {
-            expires: 7,
-            secure: true,
-            sameSite: 'Lax',
-          });
+          Cookies.set('authToken', response.data.token, { expires: 7 });
         }
         return response.data;
       },
