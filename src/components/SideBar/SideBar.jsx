@@ -37,8 +37,8 @@ const SideBar = () => {
 
   const handleLogout = () => {
     Cookies.remove('authToken');
-    location.reload();
     dispatch(clearUser());
+    location.reload();
   };
 
   return (
