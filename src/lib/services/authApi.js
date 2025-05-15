@@ -16,7 +16,11 @@ export const authApi = enhancedApi.injectEndpoints({
       }),
       transformResponse: (response) => {
         if (response?.data?.token) {
-          Cookies.set('authToken', response.data.token, { expires: 7 });
+          Cookies.set('authToken', response.data.token, {
+            expires: 7,
+            domain: process.NEXT_PUBLIC_DOMAIN,
+            sameSite: 'strict',
+          });
         }
         return response.data;
       },

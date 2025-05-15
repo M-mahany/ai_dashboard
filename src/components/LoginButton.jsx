@@ -19,8 +19,7 @@ const LoginButton = ({ data, setShowError, formErrors }) => {
 
   useEffect(() => {
     if (authData) {
-      location.reload();
-      // redirect('/dashboard/recordings');
+      redirect('/dashboard/recordings');
     }
     if (error) {
       toast(error?.data?.message || 'Error Login!', { type: 'error' });
