@@ -18,8 +18,10 @@ export const authApi = enhancedApi.injectEndpoints({
         if (response?.data?.token) {
           Cookies.set('authToken', response.data.token, {
             expires: 7,
-            domain: process.NEXT_PUBLIC_DOMAIN,
-            sameSite: 'strict',
+            httpOnly: false,
+            secure: true,
+            sameSite: 'lax',
+            path: '/',
           });
         }
         return response.data;

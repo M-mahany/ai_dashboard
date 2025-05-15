@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         source: '/api/v1/:path*',
-        destination: process.env.BACKEND_URL ?? 'https://aiaudioapi.techrafter.com/:path*', // Proxy to Backend
+        destination: process.env.BACKEND_URL + '/:path*', // Proxy to Backend
       },
     ];
   },
