@@ -12,7 +12,7 @@ export default async function middleware(req) {
   const isAuthRoutes = path.startsWith(authRoutes); // same as /auth/*
 
   // 3. Decrypt the session from the cookie
-  const authToken = (await cookies()).get('authToken')?.value;
+  const authToken = req.cookies.get('authToken')?.value;
 
   // 5. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !authToken) {
