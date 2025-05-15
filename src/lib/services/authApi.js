@@ -30,6 +30,7 @@ export const authApi = enhancedApi.injectEndpoints({
         const { data } = await queryFulfilled;
         const user = data?.user;
         dispatch(setUser(user));
+        window.location.href = '/dashboard/recordings';
       },
     }),
     authRegister: build.mutation({
