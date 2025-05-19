@@ -17,9 +17,9 @@ const DeviceKeyModal = ({ setModal, modal }) => {
     error: refreshKeyError,
   } = useRefreshDeviceKeyQuery(modal?.deviceId, { skip: modal?.name !== 'refreshKey' });
 
-  const data = getKeyData || refreshKeyData;
-  const isLoading = getKeyLoading || refreshKeyLoading;
-  const error = getKeyError || refreshKeyError;
+  const data = refreshKeyData || getKeyData;
+  const isLoading = refreshKeyLoading || getKeyLoading;
+  const error = refreshKeyError || getKeyError;
 
   const installScript = data?.data?.script;
 

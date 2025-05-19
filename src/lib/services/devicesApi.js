@@ -18,7 +18,10 @@ export const devicesApi = enhancedApi.injectEndpoints({
       providesTags: ['deviceKey'],
     }),
     refreshDeviceKey: build.query({
-      query: (id) => `devices/${id}/refreshAuthKey`,
+      query: (id) => ({
+        url: `devices/${id}/refreshAuthKey`,
+        method: 'PUT',
+      }),
       invalidatesTags: ['deviceKey'],
     }),
     getDeviceHealth: build.query({
