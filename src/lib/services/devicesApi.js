@@ -1,3 +1,4 @@
+import { waitForMs } from '@/utils/helpers/general';
 import { userRequestAPI } from './mainApi';
 
 const enhancedApi = userRequestAPI.enhanceEndpoints({
@@ -59,7 +60,18 @@ export const devicesApi = enhancedApi.injectEndpoints({
         url: `devices/${id}/${endpoint}`,
         method: 'POST',
       }),
-      invalidatesTags: ['deviceLogs'],
+      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+
+          // Delay before triggering a refetch
+          await waitForMs(10000);
+
+          dispatch(devicesApi.util.invalidateTags(['deviceLogs']));
+        } catch (error) {
+          console.error('Mutation failed', error);
+        }
+      },
     }),
     registerDeviceToStore: build.mutation({
       query: (storeId) => ({
