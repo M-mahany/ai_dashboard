@@ -101,7 +101,7 @@ const RecordingInsights = ({ recording, wavesurfer }) => {
 
                 return (
                   <span className={`innerContent ${outerIndex === 0 ? 'first' : ''}`} key={outerIndex}>
-                    <span className="contentTitle">{outerKey}</span>
+                    <span className="contentTitle">{outerKey === 'evidence' ? 'Refrence' : outerKey}</span>
                     {outerKey === 'evidence' ? (
                       <p className="clickable" onClick={() => handleSegementClick(outerValue?.start)}>
                         {outerValue?.quote} - [{formatTime(outerValue?.start)} - {formatTime(outerValue?.end)}]
