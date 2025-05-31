@@ -15,6 +15,7 @@ import { LuTimer } from 'react-icons/lu';
 import { toast } from 'react-toastify';
 import DeviceLogsTerminal from '@/components/DeviceLogsTerminal/DeviceLogsTerminal';
 import DeviceUpdateButton from '@/components/DeviceUpdateButton/DeviceUpdateButton';
+import { FaMicrophoneLines, FaMicrophoneLinesSlash } from 'react-icons/fa6';
 
 const SingleDevice = () => {
   const [activeTab, setActiveTab] = useState('health');
@@ -117,8 +118,17 @@ const SingleDevice = () => {
             View real-time status, performance, and connectivity of all devices to ensure smooth and secure operation.
           </p>
         </span>
-        <span className="bttnsWrapper">
-          <DeviceUpdateButton type={'system'} deviceId={id} /> <DeviceUpdateButton type={'app'} isLight deviceId={id} />
+        <span className="rightDiv">
+          <span className="bttnsWrapper">
+            <DeviceUpdateButton type={'system'} deviceId={id} />{' '}
+            <DeviceUpdateButton type={'app'} isLight deviceId={id} />
+          </span>
+          <span className="micStatus">
+            <span className="iconWrapper">
+              {data?.isMicActive ? <FaMicrophoneLines className="icon" /> : <FaMicrophoneLinesSlash className="icon" />}
+            </span>
+            <p>{data?.isMicActive ? 'Active' : 'InActive'}</p>
+          </span>
         </span>
       </span>
       <div className="tabsContainer">
