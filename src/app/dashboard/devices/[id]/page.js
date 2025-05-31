@@ -125,9 +125,13 @@ const SingleDevice = () => {
           </span>
           <span className="micStatus">
             <span className="iconWrapper">
-              {data?.isMicActive ? <FaMicrophoneLines className="icon" /> : <FaMicrophoneLinesSlash className="icon" />}
+              {systemHealth?.isMicActive ? (
+                <FaMicrophoneLines className="icon" />
+              ) : (
+                <FaMicrophoneLinesSlash className="icon" />
+              )}
             </span>
-            <p>{data?.isMicActive ? 'Active' : 'InActive'}</p>
+            <p>{systemHealth?.isMicActive ? 'Active' : 'InActive'}</p>
           </span>
         </span>
       </span>
