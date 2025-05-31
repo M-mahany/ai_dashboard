@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import DeviceLogsTerminal from '@/components/DeviceLogsTerminal/DeviceLogsTerminal';
 import DeviceUpdateButton from '@/components/DeviceUpdateButton/DeviceUpdateButton';
 import { FaMicrophoneLines, FaMicrophoneLinesSlash } from 'react-icons/fa6';
+import { Skeleton } from '@mui/material';
 
 const SingleDevice = () => {
   const [activeTab, setActiveTab] = useState('health');
@@ -120,18 +121,26 @@ const SingleDevice = () => {
         </span>
         <span className="rightDiv">
           <span className="bttnsWrapper">
-            <DeviceUpdateButton type={'system'} deviceId={id} />{' '}
+            <DeviceUpdateButton type={'system'} deviceId={id} />
             <DeviceUpdateButton type={'app'} isLight deviceId={id} />
           </span>
           <span className="micStatus">
-            <span className="iconWrapper">
-              {systemHealth?.isMicActive ? (
-                <FaMicrophoneLines className="icon" />
-              ) : (
-                <FaMicrophoneLinesSlash className="icon" />
-              )}
-            </span>
-            <p>{systemHealth?.isMicActive ? 'Active' : 'InActive'}</p>
+            {isLoading ? (
+              <Skeleton variant="circular" width={35} height={35} />
+            ) : (
+              <span className="iconWrapper">
+                {systemHealth?.isMicActive ? (
+                  <FaMicrophoneLines className="icon" />
+                ) : (
+                  <FaMicrophoneLinesSlash className="icon" />
+                )}
+              </span>
+            )}
+            {isLoading ? (
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} style={{ width: '60px' }} />
+            ) : (
+              <p>{systemHealth?.isMicActive ? 'Active' : 'InActive'}</p>
+            )}
           </span>
         </span>
       </span>

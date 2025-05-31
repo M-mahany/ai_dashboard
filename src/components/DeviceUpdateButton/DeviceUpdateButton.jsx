@@ -8,6 +8,7 @@ const DeviceUpdateButton = ({ type, isLight, deviceId }) => {
   const [updateDevice, { data, isLoading, error }] = useUpdateDeviceMutation();
 
   const handleUpdate = () => {
+    if (!deviceId) return;
     updateDevice({ id: deviceId, endpoint: `update-${type}` });
   };
 
