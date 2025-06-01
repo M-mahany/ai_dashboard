@@ -42,8 +42,8 @@ const SingleDevice = () => {
     const socket = getSocket();
 
     socket.on('mic-status-updated', ({ deviceId, isMicActive }) => {
-      if (systemHealth && id === deviceId) {
-        setLiveMicActive(isMicActive);
+      if (id === deviceId) {
+        setLiveMicActive(() => isMicActive);
       }
     });
 
