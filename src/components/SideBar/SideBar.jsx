@@ -13,9 +13,10 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { IconButton } from '@mui/material';
 import { HiOutlineMenuAlt2 } from 'react-icons/hi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { clearUser } from '@/lib/features/authSlice';
+import { getSocket } from '@/lib/socket';
 
 const linkIcon = (linkName) => {
   switch (linkName) {
@@ -40,6 +41,23 @@ const SideBar = () => {
     dispatch(clearUser());
     window.location.href = '/auth/login';
   };
+
+  useEffect(() => {
+    const socket = getSocket();
+
+    socket.on('connect', () => {
+      console.log('✅ Dashboard connected:', socket.id);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('⚠️ Dashboard socket disconnected');
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+    };
+  }, []);
 
   return (
     <div className={`sideBar ${isOpen ? 'open' : ''}`}>

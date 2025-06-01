@@ -17,10 +17,12 @@ import DeviceLogsTerminal from '@/components/DeviceLogsTerminal/DeviceLogsTermin
 import DeviceUpdateButton from '@/components/DeviceUpdateButton/DeviceUpdateButton';
 import { FaMicrophoneLines, FaMicrophoneLinesSlash } from 'react-icons/fa6';
 import { Skeleton } from '@mui/material';
+import { getSocket } from '@/lib/socket';
 
 const SingleDevice = () => {
   const [activeTab, setActiveTab] = useState('health');
   const tabs = ['health', 'logs'];
+  const [liveMicActive, setLiveMicActive] = useState(false);
 
   // get recording id
   const params = useParams();
@@ -29,6 +31,26 @@ const SingleDevice = () => {
   const { data, isLoading, error } = useGetDeviceHealthQuery(id);
 
   const systemHealth = data?.data;
+
+  useEffect(() => {
+    if (systemHealth) {
+      setLiveMicActive(systemHealth?.isMicActive);
+    }
+  }, [systemHealth]);
+
+  useEffect(() => {
+    const socket = getSocket();
+
+    socket.on('mic-status-updated', ({ deviceId, isMicActive }) => {
+      if (systemHealth && id === deviceId) {
+        setLiveMicActive(isMicActive);
+      }
+    });
+
+    return () => {
+      socket.off('mic-status-updated');
+    };
+  }, []);
 
   const sectionOne = [
     {
@@ -129,17 +151,13 @@ const SingleDevice = () => {
               <Skeleton variant="circular" width={35} height={35} />
             ) : (
               <span className="iconWrapper">
-                {systemHealth?.isMicActive ? (
-                  <FaMicrophoneLines className="icon" />
-                ) : (
-                  <FaMicrophoneLinesSlash className="icon" />
-                )}
+                {liveMicActive ? <FaMicrophoneLines className="icon" /> : <FaMicrophoneLinesSlash className="icon" />}
               </span>
             )}
             {isLoading ? (
               <Skeleton variant="text" sx={{ fontSize: '1rem' }} style={{ width: '60px' }} />
             ) : (
-              <p>{systemHealth?.isMicActive ? 'Active' : 'InActive'}</p>
+              <p>{liveMicActive ? 'Active' : 'InActive'}</p>
             )}
           </span>
         </span>
